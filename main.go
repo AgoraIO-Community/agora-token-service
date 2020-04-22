@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"time"
 
-	"agora-token-server/rtctokenbuilder"
+	"github.com/digitallysavvy/agora-token-server/rtctokenbuilder"
 
 	"github.com/gin-gonic/gin"
 )

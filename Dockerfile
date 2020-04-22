@@ -7,7 +7,7 @@ RUN ls $GOPATH
 
 RUN go get github.com/gin-gonic/gin
 RUN ls /go/src/github.com/
-# RUN go get -v github.com/digitallysavvy/agora-token-server
+# RUN GO111MODULE=on go get -v github.com/digitallysavvy/agora-token-server
 
 
 
