@@ -3,7 +3,7 @@ package rtctokenbuilder
 import (
 	"fmt"
 
-	"github.com/digitallysavvy/agora-token-server/accesstoken"
+	"accesstoken"
 )
 
 // Role Type

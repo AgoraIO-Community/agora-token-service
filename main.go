@@ -6,14 +6,15 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/digitallysavvy/agora-token-server/rtctokenbuilder"
+	"rtctokenbuilder"
+
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
 
-	appID, appIDExists := os.LookupEnv("APPID")
-	appCertificate, appCertExists := os.LookupEnv("APPCERT")
+	appID, appIDExists := os.LookupEnv("APP_ID")
+	appCertificate, appCertExists := os.LookupEnv("APP_CERT")
 
 	if !appIDExists || !appCertExists {
 		log.Fatal("FATAL ERROR: ENV not properly configured, check appID and appCertificate")
