@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/digitallysavvy/agora-token-server/rtctokenbuilder"
+	"agora-token-server/rtctokenbuilder"
 
 	"github.com/gin-gonic/gin"
 )
@@ -77,7 +77,7 @@ func main() {
 			result, err = rtctokenbuilder.BuildTokenWithUserAccount(appID, appCertificate, channelName, uidStr, rtctokenbuilder.RoleAttendee, expireTimestamp)
 		} else {
 			errMsg := "Unknown Tokentype: " + tokentype
-			log.Printf(errMsg)
+			log.Println(errMsg)
 			c.AbortWithStatusJSON(400, gin.H{
 				"status": 400,
 				"error":  errMsg,
@@ -93,7 +93,7 @@ func main() {
 				"status": 400,
 			})
 		} else {
-			log.Printf("Token generated\n")
+			log.Println("Token generated\n")
 			c.JSON(200, gin.H{
 				"token": result,
 			})

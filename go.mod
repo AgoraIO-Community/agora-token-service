@@ -1,4 +1,4 @@
-module github.com/digitallysavvy/agora-token-server
+module agora-token-server
 
 go 1.14
 
