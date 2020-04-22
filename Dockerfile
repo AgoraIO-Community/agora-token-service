@@ -20,11 +20,13 @@ ENV APP_CERT=""
 # Build the goingout command inside the container.
 # (You may fetch or manage dependencies here,
 # either manually or with a tool like "godep".)
-WORKDIR /go/src/github.com/digitallysavvy/agora-token-server
-RUN go build 
-
+WORKDIR $GOPATH/src/github.com/digitallysavvy/agora-token-server
+# RUN go build github.com/digitallysavvy/agora-token-server
+# RUN GO111MODULE=on go build github.com/digitallysavvy/agora-token-server
+RUN go build
+# RUN go run main.go
 # Run the goingout command by default when the container starts.
-ENTRYPOINT /go/src/github.com/digitallysavvy/agora-token-server
+ENTRYPOINT /go/bin/agora-token-server
 
 # Document that the service listens on port 8080.
 EXPOSE 8080
