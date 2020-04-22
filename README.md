@@ -7,7 +7,7 @@ go run main.go
 ```
 
 ## Docker ##
-Currently Docker is failing to properly build the token server. I'm using Go Modules for linking of submodules. Running into issues with `docker build -t token-server .`` 
+Currently Docker is failing to properly build the token server. I'm using Go Modules for linking of submodules. Running into issues with `docker build -t token-server .` 
 
 ```
 docker build -t token-server .
