@@ -9,21 +9,22 @@ RUN go get github.com/gin-gonic/gin
 RUN ls /go/src/github.com/
 # RUN GO111MODULE=on go get -v github.com/digitallysavvy/agora-token-server
 
-
-
 ADD . /go/src/github.com/digitallysavvy/agora-token-server
-RUN ls /go/src/github.com/digitallysavvy/agora-token-server
+# ADD /RtcTokenBuilder /go/src/github.com/digitallysavvy/RtcTokenBuilder
+# ADD /AccessToken /go/src/github.com/digitallysavvy/AccessToken
+RUN ls -l /go/src/github.com/digitallysavvy/agora-token-server
 
-ENV APP_ID="4fdfd402ce0a45ea94d850f2124f0b36"
-ENV APP_CERT="01e25afb21d14b7b832a7e2b0a43d5e1"
+ENV APP_ID=""
+ENV APP_CERT=""
 
 # Build the goingout command inside the container.
 # (You may fetch or manage dependencies here,
 # either manually or with a tool like "godep".)
-# RUN go build github.com/digitallysavvy/agora-token-server
+WORKDIR /go/src/github.com/digitallysavvy/agora-token-server
+RUN go build 
 
 # Run the goingout command by default when the container starts.
-ENTRYPOINT /go/bin/agora-token-server
+ENTRYPOINT /go/src/github.com/digitallysavvy/agora-token-server
 
 # Document that the service listens on port 8080.
 EXPOSE 8080
