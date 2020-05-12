@@ -93,7 +93,7 @@ func main() {
 				"status": 400,
 			})
 		} else {
-			log.Println("Token generated\n")
+			log.Println("Token generated")
 			c.JSON(200, gin.H{
 				"token": result,
 			})
