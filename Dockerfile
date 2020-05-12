@@ -3,10 +3,10 @@
 FROM golang:alpine
 RUN apk add git ca-certificates --update
 
-RUN ls $GOPATH
-
+# fetch dependancies github
 RUN go get github.com/gin-gonic/gin
-ADD . /go/src/github.com/digitallysavvy/agora-token-server
+# RUN go get github.com/digitallysavvy/agora-token-server
+ADD . /go/src/github.com/digitallysavvy/agora-token-server 
 
 ENV APP_ID=""
 ENV APP_CERT=""
