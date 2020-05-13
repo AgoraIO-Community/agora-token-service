@@ -20,3 +20,7 @@ docker build -t agora-token-server .
 ```
 docker run agora-token-server
 ```
+> Note: for testing locally
+```
+docker run -p 8080:8080 agora-token-server
+```
