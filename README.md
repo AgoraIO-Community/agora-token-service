@@ -1,4 +1,6 @@
 # agora-token-server
+![Go](https://github.com/digitallysavvy/agora-token-server/workflows/Go/badge.svg?branch=master)
+Written in Golang, using Gin middleware to create a RESTful webservice for generating user tokens for use with the Agora.io platform.
 
 ## How to Run ##
 Set the APP_ID and APP_CERT env variables.
