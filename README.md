@@ -28,3 +28,21 @@ docker run agora-token-server
 ```
 docker run -p 8080:8080 agora-token-server
 ```
+
+## Endpoints ##
+
+### Ping ###
+**endpoint structure**
+```/ping```
+response:
+``` {"message":"pong"} ```
+
+### Token ###
+Token endpoint requires a `tokentype` (uid || userAccount), `channelName`, and the user's `uid` (type varies based on `tokentype`). 
+`(optional)` Pass an integer to represent the token lifetime in seconds.
+
+**endpoint structure**
+```/token/:tokentype/:channelName/:uid/?expireTime```
+
+response:
+``` {"token":" "} ```
