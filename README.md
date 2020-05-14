@@ -18,15 +18,15 @@ ENV APP_CERT=""
 ```
 #2. To build the container: 
 ```
-docker build -t agora-token-server .
+docker build -t agora-token-service .
 ```
 #3. Run the container 
 ```
-docker run agora-token-server
+docker run agora-token-service
 ```
 > Note: for testing locally
 ```
-docker run -p 8080:8080 agora-token-server
+docker run -p 8080:8080 agora-token-service
 ```
 
 ## Endpoints ##
