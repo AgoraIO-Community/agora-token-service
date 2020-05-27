@@ -54,3 +54,8 @@ response:
 ``` 
 {"token":" "} 
 ```
+
+## RTM ##
+[TODO]: Add support for RTM Tokens
+* Add RTM endpoint
+* Implement [RTM Token Builder](https://github.com/AgoraIO/Tools/blob/master/DynamicKey/AgoraDynamicKey/go/src/RtmTokenBuilder/RtmTokenBuilder.go).
