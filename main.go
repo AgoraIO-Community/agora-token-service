@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/digitallysavvy/agora-token-server/rtctokenbuilder"
+	"github.com/digitallysavvy/agora-token-server/rtmtokenbuilder"
 
 	"github.com/gin-gonic/gin"
 )
@@ -29,7 +30,7 @@ func main() {
 	})
 
 	// This handler will match  with or without a tokentype
-	api.GET("token/:tokentype/:channelName/:uid/", func(c *gin.Context) {
+	api.GET("rtc/:tokentype/:channelName/:uid/", func(c *gin.Context) {
 		// get param values
 		channelName := c.Param("channelName")
 		uidStr := c.Param("uid")
@@ -84,6 +85,51 @@ func main() {
 			})
 			return
 		}
+
+		if err != nil {
+			log.Println(err) // token failed to generate
+			c.Error(err)
+			c.AbortWithStatusJSON(400, gin.H{
+				"error":  err,
+				"status": 400,
+			})
+		} else {
+			log.Println("Token generated")
+			c.JSON(200, gin.H{
+				"token": result,
+			})
+		}
+
+	})
+
+	api.GET("rtm/:uid/", func(c *gin.Context) {
+		// get param values
+		uidStr := c.Param("uid")
+		expireTime := c.DefaultQuery("expiry", "3600")
+
+		log.Printf("rtm token\n")
+
+		// declare vars
+		var result string // token string
+		var err error     // catch-all error
+
+		expireTime64, err := strconv.ParseUint(expireTime, 10, 64)
+		// check if string conversion fails
+		if err != nil {
+			c.Error(err)
+			c.AbortWithStatusJSON(400, gin.H{
+				"message": "expireTime conversion error",
+				"status":  400,
+			})
+			return
+		}
+
+		// set timestamps
+		expireTimeInSeconds := uint32(expireTime64)
+		currentTimestamp := uint32(time.Now().UTC().Unix())
+		expireTimestamp := currentTimestamp + expireTimeInSeconds
+
+		result, err = rtmtokenbuilder.BuildToken(appID, appCertificate, uidStr, rtmtokenbuilder.RoleRtmUser, expireTimestamp)
 
 		if err != nil {
 			log.Println(err) // token failed to generate
