@@ -41,13 +41,13 @@ response:
 {"message":"pong"} 
 ```
 
-### Token ###
-Token endpoint requires a `tokentype` (uid || userAccount), `channelName`, and the user's `uid` (type varies based on `tokentype`). 
+### RTC Token ###
+The `rtc` token endpoint requires a `tokentype` (uid || userAccount), `channelName`, and the user's `uid` (type varies based on `tokentype`). 
 `(optional)` Pass an integer to represent the token lifetime in seconds.
 
 **endpoint structure** 
 ```
-/token/:tokentype/:channelName/:uid/?expireTime
+/rtc/:tokentype/:channelName/:uid/?expireTime
 ```
 
 response:
@@ -56,6 +56,14 @@ response:
 ```
 
 ## RTM ##
-[TODO]: Add support for RTM Tokens
-* Add RTM endpoint
-* Implement [RTM Token Builder](https://github.com/AgoraIO/Tools/blob/master/DynamicKey/AgoraDynamicKey/go/src/RtmTokenBuilder/RtmTokenBuilder.go).
+The `rtm` token endpoint requires the user's `uid`. 
+`(optional)` Pass an integer to represent the privelege lifetime in seconds.
+**endpoint structure** 
+```
+/rtm/:uid/?expireTime
+```
+
+response:
+``` 
+{"token":" "} 
+```
