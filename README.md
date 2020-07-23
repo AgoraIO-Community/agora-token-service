@@ -41,29 +41,19 @@ response:
 {"message":"pong"} 
 ```
 
-### RTC Token ###
-The `rtc` token endpoint requires a `tokentype` (uid || userAccount), `channelName`, and the user's `uid` (type varies based on `tokentype`). 
-`(optional)` Pass an integer to represent the token lifetime in seconds.
+### Token ###
+The token endpoint requires a `channelName`, and the user's `uid` to generate both RTC and RTM tokens. 
+`(optional)` Pass an integer to represent the token privilege lifetime in seconds.
 
 **endpoint structure** 
 ```
-/rtc/:tokentype/:channelName/:uid/?expireTime
+/token/:channelName/:uid/?expireTime
 ```
 
 response:
 ``` 
-{"token":" "} 
-```
-
-## RTM ##
-The `rtm` token endpoint requires the user's `uid`. 
-`(optional)` Pass an integer to represent the privelege lifetime in seconds.
-**endpoint structure** 
-```
-/rtm/:uid/?expireTime
-```
-
-response:
-``` 
-{"token":" "} 
+{
+  "rtcToken":" ",
+  "rtmToken":" ",
+} 
 ```
