@@ -42,12 +42,12 @@ response:
 ```
 
 ### Token ###
-The token endpoint requires a `channelName`, and the user's `uid` to generate both RTC and RTM tokens. 
+The token endpoint requires a `channelName`, the user's `role` (subscriber/publisher), and the user's `uid` to generate both RTC and RTM tokens. 
 `(optional)` Pass an integer to represent the token privilege lifetime in seconds.
 
 **endpoint structure** 
 ```
-/token/:channelName/:uid/?expireTime
+/token/:channelName/:role/:uid/?expireTime
 ```
 
 response:
