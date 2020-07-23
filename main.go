@@ -30,7 +30,7 @@ func main() {
 	})
 
 	// This handler will match  with or without a tokentype
-	api.GET("/token/:channelName/:uid/", func(c *gin.Context) {
+	api.GET("/token/:channelName/:role/:uid", func(c *gin.Context) {
 		// get param values
 		channelName := c.Param("channelName")
 		uidStr := c.Param("uid")
@@ -45,6 +45,16 @@ func main() {
 			uidStr = ""
 		}
 
+		// check and set role
+		var userRole rtctokenbuilder.Role
+
+		if c.Param("role") == "publisher" {
+			userRole = rtctokenbuilder.RolePublisher
+		} else {
+			userRole = rtctokenbuilder.RoleSubscriber
+		}
+
+		// convert expiration from string to base10
 		expireTime64, err := strconv.ParseUint(expireTime, 10, 64)
 		// check if string conversion fails
 		if err != nil {
@@ -61,7 +71,7 @@ func main() {
 		currentTimestamp := uint32(time.Now().UTC().Unix())
 		expireTimestamp := currentTimestamp + expireTimeInSeconds
 
-		rtcToken, err = rtctokenbuilder.BuildTokenWithUserAccount(appID, appCertificate, channelName, uidStr, rtctokenbuilder.RoleAttendee, expireTimestamp)
+		rtcToken, err = rtctokenbuilder.BuildTokenWithUserAccount(appID, appCertificate, channelName, uidStr, userRole, expireTimestamp)
 
 		if err != nil {
 			log.Println(err) // token failed to generate
@@ -82,16 +92,26 @@ func main() {
 				"error":  err,
 				"status": 400,
 			})
-		} else {
-			log.Println("Token generated")
-			c.JSON(200, gin.H{
-				"rtcToken": rtcToken,
-				"rtmToken": rtmToken,
-			})
+			return
 		}
+
+		log.Println("Token generated")
+
+		// set headers
+		c.Header("Cache-Control", "private, no-cache, no-store, must-revalidate")
+		c.Header("Expires", "-1")
+		c.Header("Pragma", "no-cache")
+		c.Header("Access-Control-Allow-Origin", "*")
+
+		// set response body
+		c.JSON(200, gin.H{
+			"rtcToken": rtcToken,
+			"rtmToken": rtmToken,
+		})
 
 	})
 
 	// listen and serve on localhost:8080
 	api.Run(":8080")
+
 }
