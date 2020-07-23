@@ -70,6 +70,7 @@ func main() {
 				"error":  err,
 				"status": 400,
 			})
+			return
 		}
 
 		rtmToken, err = rtmtokenbuilder.BuildToken(appID, appCertificate, uidStr, rtmtokenbuilder.RoleRtmUser, expireTimestamp)
