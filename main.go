@@ -38,6 +38,7 @@ func main() {
 	api.Use(nocache())
 	api.GET("rtc/:tokentype/:channelName/:uid/", getRtcToken)
 	api.GET("rtm/:uid/", getRtmToken)
+	api.GET("rte/:tokentype/:channelName/:uid/", getBothTokens)
 	api.Run(":8080") // listen and serve on localhost:8080
 }
 
@@ -49,6 +50,15 @@ func nocache() gin.HandlerFunc {
 		c.Header("Pragma", "no-cache")
 		c.Header("Access-Control-Allow-Origin", "*")
 	}
+}
+
+func getBothTokens(c *gin.Context) {
+	getRtcToken(c)
+	// check if first token succeeded
+	if !c.IsAborted() {
+		getRtmToken(c)
+	}
+
 }
 
 func getRtcToken(c *gin.Context) {
@@ -69,7 +79,7 @@ func getRtcToken(c *gin.Context) {
 	if err != nil {
 		c.Error(err)
 		c.AbortWithStatusJSON(400, gin.H{
-			"message": "expireTime conversion error",
+			"message": "Error Generating RTC token: expireTime conversion error",
 			"status":  400,
 		})
 		return
@@ -86,7 +96,7 @@ func getRtcToken(c *gin.Context) {
 		if err != nil {
 			c.Error(err)
 			c.AbortWithStatusJSON(400, gin.H{
-				"message": "UID conversion error",
+				"message": "Error Generating RTC token: UID conversion error.",
 				"status":  400,
 			})
 			return
@@ -98,7 +108,7 @@ func getRtcToken(c *gin.Context) {
 		log.Printf("\nBuilding Token with userAccount: %s\n", uidStr)
 		result, err = rtctokenbuilder.BuildTokenWithUserAccount(appID, appCertificate, channelName, uidStr, rtctokenbuilder.RoleAttendee, expireTimestamp)
 	} else {
-		errMsg := "Unknown Tokentype: " + tokentype
+		errMsg := "Error Generating RTC token: Unknown Tokentype: " + tokentype
 		log.Println(errMsg)
 		c.AbortWithStatusJSON(400, gin.H{
 			"status": 400,
@@ -110,14 +120,15 @@ func getRtcToken(c *gin.Context) {
 	if err != nil {
 		log.Println(err) // token failed to generate
 		c.Error(err)
+		errMsg := "Error Generating RTC token: " + err.Error()
 		c.AbortWithStatusJSON(400, gin.H{
-			"error":  err,
 			"status": 400,
+			"error":  errMsg,
 		})
 	} else {
 		log.Println("Token generated")
 		c.JSON(200, gin.H{
-			"token": result,
+			"rtcToken": result,
 		})
 	}
 }
@@ -138,7 +149,7 @@ func getRtmToken(c *gin.Context) {
 	if err != nil {
 		c.Error(err)
 		c.AbortWithStatusJSON(400, gin.H{
-			"message": "expireTime conversion error",
+			"message": "Error Generating RTM token: expireTime conversion error",
 			"status":  400,
 		})
 		return
@@ -154,14 +165,15 @@ func getRtmToken(c *gin.Context) {
 	if err != nil {
 		log.Println(err) // token failed to generate
 		c.Error(err)
+		errMsg := "Error Generating RTM token: " + err.Error()
 		c.AbortWithStatusJSON(400, gin.H{
-			"error":  err,
+			"error":  errMsg,
 			"status": 400,
 		})
 	} else {
 		log.Println("Token generated")
 		c.JSON(200, gin.H{
-			"token": result,
+			"rtmToken": result,
 		})
 	}
 }
