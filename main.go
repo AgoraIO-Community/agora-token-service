@@ -6,8 +6,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/digitallysavvy/agora-token-server/rtctokenbuilder"
-	"github.com/digitallysavvy/agora-token-server/rtmtokenbuilder"
+	"github.com/AgoraIO-Community/go-tokenbuilder/rtctokenbuilder"
+	"github.com/AgoraIO-Community/go-tokenbuilder/rtmtokenbuilder"
 
 	"github.com/gin-gonic/gin"
 )
@@ -36,9 +36,9 @@ func main() {
 	})
 
 	api.Use(nocache())
-	api.GET("rtc/:tokentype/:channelName/:uid/", getRtcToken)
+	api.GET("rtc/:tokentype/:channelName/:uid/:role/", getRtcToken)
 	api.GET("rtm/:uid/", getRtmToken)
-	api.GET("rte/:tokentype/:channelName/:uid/", getBothTokens)
+	api.GET("rte/:tokentype/:channelName/:uid/:role/", getBothTokens)
 	api.Run(":8080") // listen and serve on localhost:8080
 }
 
@@ -65,6 +65,7 @@ func getRtcToken(c *gin.Context) {
 	// get param values
 	channelName := c.Param("channelName")
 	uidStr := c.Param("uid")
+	roleStr := c.Param("role")
 	tokentype := c.Param("tokentype")
 	expireTime := c.DefaultQuery("expiry", "3600")
 
@@ -85,6 +86,13 @@ func getRtcToken(c *gin.Context) {
 		return
 	}
 
+	var role rtctokenbuilder.Role
+	if roleStr == "publisher" {
+		role = rtctokenbuilder.RolePublisher
+	} else {
+		role = rtctokenbuilder.RoleSubscriber
+	}
+
 	// set timestamps
 	expireTimeInSeconds := uint32(expireTime64)
 	currentTimestamp := uint32(time.Now().UTC().Unix())
@@ -103,10 +111,10 @@ func getRtcToken(c *gin.Context) {
 		}
 		uid := uint32(uid64) // convert uid from uint64 to uint 32
 		log.Printf("\nBuilding Token with uid: %d\n", uid)
-		result, err = rtctokenbuilder.BuildTokenWithUID(appID, appCertificate, channelName, uid, rtctokenbuilder.RoleAttendee, expireTimestamp)
+		result, err = rtctokenbuilder.BuildTokenWithUID(appID, appCertificate, channelName, uid, role, expireTimestamp)
 	} else if tokentype == "userAccount" {
 		log.Printf("\nBuilding Token with userAccount: %s\n", uidStr)
-		result, err = rtctokenbuilder.BuildTokenWithUserAccount(appID, appCertificate, channelName, uidStr, rtctokenbuilder.RoleAttendee, expireTimestamp)
+		result, err = rtctokenbuilder.BuildTokenWithUserAccount(appID, appCertificate, channelName, uidStr, role, expireTimestamp)
 	} else {
 		errMsg := "Error Generating RTC token: Unknown Tokentype: " + tokentype
 		log.Println(errMsg)
