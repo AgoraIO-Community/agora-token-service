@@ -74,7 +74,7 @@ The `rte` token endpoint generates both the `rtc` and `rtm` tokens with a single
 
 **endpoint structure** 
 ```
-/rtc/:tokentype/:channelName/:uid/?expireTime
+/rte/:tokentype/:channelName/:uid/?expireTime
 ```
 
 response:
