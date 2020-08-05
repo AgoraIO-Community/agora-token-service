@@ -47,7 +47,7 @@ The `rtc` token endpoint requires a `tokentype` (uid || userAccount), `channelNa
 
 **endpoint structure** 
 ```
-/rtc/:tokentype/:channelName/:uid/?expireTime
+/rtc/:channelName/:role/:tokentype/:uid/?expireTime
 ```
 
 response:
@@ -74,7 +74,7 @@ The `rte` token endpoint generates both the `rtc` and `rtm` tokens with a single
 
 **endpoint structure** 
 ```
-/rte/:tokentype/:channelName/:uid/?expireTime
+/rte/:channelName/:role/:tokentype/:uid/?expireTime
 ```
 
 response:
