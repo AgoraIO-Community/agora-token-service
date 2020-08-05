@@ -36,9 +36,9 @@ func main() {
 	})
 
 	api.Use(nocache())
-	api.GET("rtc/:tokentype/:channelName/:uid/:role/", getRtcToken)
+	api.GET("rtc/:channelName/:role/:tokentype/:uid/", getRtcToken)
 	api.GET("rtm/:uid/", getRtmToken)
-	api.GET("rte/:tokentype/:channelName/:uid/:role/", getBothTokens)
+	api.GET("rte/:channelName/:role/:tokentype/:uid/", getBothTokens)
 	api.Run(":8080") // listen and serve on localhost:8080
 }
 
@@ -52,12 +52,12 @@ func nocache() gin.HandlerFunc {
 	}
 }
 
-func validateRtcParams(c *gin.Context) (channelName, uidStr, roleStr, tokentype string, expireTime64 uint64, err error) {
+func validateRtcParams(c *gin.Context) (channelName, roleStr, tokentype, uidStr string, expireTime64 uint64, err error) {
 	// get param values
 	channelName = c.Param("channelName")
-	uidStr = c.Param("uid")
 	roleStr = c.Param("role")
 	tokentype = c.Param("tokentype")
+	uidStr = c.Param("uid")
 	expireTime := c.DefaultQuery("expiry", "3600")
 
 	var parseErr error
@@ -67,7 +67,7 @@ func validateRtcParams(c *gin.Context) (channelName, uidStr, roleStr, tokentype 
 		err = fmt.Errorf("failed to parse expireTime: %s, causing error: %s", expireTime, parseErr)
 	}
 	// check if string conversion fails
-	return channelName, uidStr, roleStr, tokentype, expireTime64, err
+	return channelName, roleStr, tokentype, uidStr, expireTime64, err
 }
 
 func validateRtmParams(c *gin.Context) (uidStr string, expireTime64 uint64, err error) {
@@ -136,7 +136,7 @@ func generateRtcToken(channelName, uidStr, roleStr, tokentype string, expireTime
 func getRtcToken(c *gin.Context) {
 	log.Printf("rtc token\n")
 	// get param values
-	channelName, uidStr, roleStr, tokentype, expireTime64, err := validateRtcParams(c)
+	channelName, roleStr, tokentype, uidStr, expireTime64, err := validateRtcParams(c)
 
 	if err != nil {
 		c.Error(err)
@@ -200,7 +200,7 @@ func getRtmToken(c *gin.Context) {
 func getBothTokens(c *gin.Context) {
 	log.Printf("dual token\n")
 	// get rtc param values
-	channelName, uidStr, roleStr, tokentype, expireTime64, rtcParamErr := validateRtcParams(c)
+	channelName, roleStr, tokentype, uidStr, expireTime64, rtcParamErr := validateRtcParams(c)
 
 	if rtcParamErr != nil {
 		c.Error(rtcParamErr)
