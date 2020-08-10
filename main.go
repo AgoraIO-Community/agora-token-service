@@ -52,91 +52,10 @@ func nocache() gin.HandlerFunc {
 	}
 }
 
-func validateRtcParams(c *gin.Context) (channelName, roleStr, tokentype, uidStr string, expireTime64 uint64, err error) {
-	// get param values
-	channelName = c.Param("channelName")
-	roleStr = c.Param("role")
-	tokentype = c.Param("tokentype")
-	uidStr = c.Param("uid")
-	expireTime := c.DefaultQuery("expiry", "3600")
-
-	var parseErr error
-	expireTime64, parseErr = strconv.ParseUint(expireTime, 10, 64)
-	if err != nil {
-		// with formatting
-		err = fmt.Errorf("failed to parse expireTime: %s, causing error: %s", expireTime, parseErr)
-	}
-	// check if string conversion fails
-	return channelName, roleStr, tokentype, uidStr, expireTime64, err
-}
-
-func validateRtmParams(c *gin.Context) (uidStr string, expireTime64 uint64, err error) {
-	// get param values
-	uidStr = c.Param("uid")
-	expireTime := c.DefaultQuery("expiry", "3600")
-
-	var parseErr error
-	expireTime64, parseErr = strconv.ParseUint(expireTime, 10, 64)
-	if err != nil {
-		// with formatting
-		err = fmt.Errorf("failed to parse expireTime: %s, causing error: %s", expireTime, parseErr)
-	}
-	// check if string conversion fails
-	return uidStr, expireTime64, err
-}
-
-func generateRtmToken(uidStr string, expireTime64 uint64) (rtmToken string, err error) {
-	// set timestamps
-	expireTimeInSeconds := uint32(expireTime64)
-	currentTimestamp := uint32(time.Now().UTC().Unix())
-	expireTimestamp := currentTimestamp + expireTimeInSeconds
-
-	rtmToken, tokenErr := rtmtokenbuilder.BuildToken(appID, appCertificate, uidStr, rtmtokenbuilder.RoleRtmUser, expireTimestamp)
-	return rtmToken, tokenErr
-}
-
-func generateRtcToken(channelName, uidStr, roleStr, tokentype string, expireTime64 uint64) (rtcToken string, err error) {
-	var role rtctokenbuilder.Role
-	if roleStr == "publisher" {
-		role = rtctokenbuilder.RolePublisher
-	} else {
-		role = rtctokenbuilder.RoleSubscriber
-	}
-
-	// set timestamps
-	expireTimeInSeconds := uint32(expireTime64)
-	currentTimestamp := uint32(time.Now().UTC().Unix())
-	expireTimestamp := currentTimestamp + expireTimeInSeconds
-
-	if tokentype == "userAccount" {
-		log.Printf("Building Token with userAccount: %s\n", uidStr)
-		rtcToken, err = rtctokenbuilder.BuildTokenWithUserAccount(appID, appCertificate, channelName, uidStr, role, expireTimestamp)
-		return rtcToken, err
-
-	} else if tokentype == "uid" {
-		uid64, parseErr := strconv.ParseUint(uidStr, 10, 64)
-		// check if conversion fails
-		if parseErr != nil {
-			err = fmt.Errorf("failed to parse uidStr: %s, to uint causing error: %s", uidStr, parseErr)
-			return "", err
-		}
-
-		uid := uint32(uid64) // convert uid from uint64 to uint 32
-		log.Printf("Building Token with uid: %d\n", uid)
-		rtcToken, err = rtctokenbuilder.BuildTokenWithUID(appID, appCertificate, channelName, uid, role, expireTimestamp)
-		return rtcToken, err
-
-	} else {
-		err = fmt.Errorf("failed to generate RTC token for Unknown Tokentype: %s", tokentype)
-		log.Println(err)
-		return "", err
-	}
-}
-
 func getRtcToken(c *gin.Context) {
 	log.Printf("rtc token\n")
 	// get param values
-	channelName, roleStr, tokentype, uidStr, expireTime64, err := validateRtcParams(c)
+	channelName, tokentype, uidStr, role, expireTimestamp, err := parseRtcParams(c)
 
 	if err != nil {
 		c.Error(err)
@@ -147,7 +66,7 @@ func getRtcToken(c *gin.Context) {
 		return
 	}
 
-	rtcToken, tokenErr := generateRtcToken(channelName, uidStr, roleStr, tokentype, expireTime64)
+	rtcToken, tokenErr := generateRtcToken(channelName, uidStr, tokentype, role, expireTimestamp)
 
 	if tokenErr != nil {
 		log.Println(tokenErr) // token failed to generate
@@ -168,7 +87,7 @@ func getRtcToken(c *gin.Context) {
 func getRtmToken(c *gin.Context) {
 	log.Printf("rtm token\n")
 	// get param values
-	uidStr, expireTime64, err := validateRtmParams(c)
+	uidStr, expireTimestamp, err := parseRtmParams(c)
 
 	if err != nil {
 		c.Error(err)
@@ -179,7 +98,7 @@ func getRtmToken(c *gin.Context) {
 		return
 	}
 
-	rtmToken, tokenErr := generateRtmToken(uidStr, expireTime64)
+	rtmToken, tokenErr := rtmtokenbuilder.BuildToken(appID, appCertificate, uidStr, rtmtokenbuilder.RoleRtmUser, expireTimestamp)
 
 	if tokenErr != nil {
 		log.Println(err) // token failed to generate
@@ -200,7 +119,7 @@ func getRtmToken(c *gin.Context) {
 func getBothTokens(c *gin.Context) {
 	log.Printf("dual token\n")
 	// get rtc param values
-	channelName, roleStr, tokentype, uidStr, expireTime64, rtcParamErr := validateRtcParams(c)
+	channelName, tokentype, uidStr, role, expireTimestamp, rtcParamErr := parseRtcParams(c)
 
 	if rtcParamErr != nil {
 		c.Error(rtcParamErr)
@@ -211,9 +130,9 @@ func getBothTokens(c *gin.Context) {
 		return
 	}
 	// generate the rtcToken
-	rtcToken, rtcTokenErr := generateRtcToken(channelName, uidStr, roleStr, tokentype, expireTime64)
+	rtcToken, rtcTokenErr := generateRtcToken(channelName, uidStr, tokentype, role, expireTimestamp)
 	// generate rtmToken
-	rtmToken, rtmTokenErr := generateRtmToken(uidStr, expireTime64)
+	rtmToken, rtmTokenErr := rtmtokenbuilder.BuildToken(appID, appCertificate, uidStr, rtmtokenbuilder.RoleRtmUser, expireTimestamp)
 
 	if rtcTokenErr != nil {
 		log.Println(rtcTokenErr) // token failed to generate
@@ -239,4 +158,79 @@ func getBothTokens(c *gin.Context) {
 		})
 	}
 
+}
+
+func parseRtcParams(c *gin.Context) (channelName, tokentype, uidStr string, role rtctokenbuilder.Role, expireTimestamp uint32, err error) {
+	// get param values
+	channelName = c.Param("channelName")
+	roleStr := c.Param("role")
+	tokentype = c.Param("tokentype")
+	uidStr = c.Param("uid")
+	expireTime := c.DefaultQuery("expiry", "3600")
+
+	if roleStr == "publisher" {
+		role = rtctokenbuilder.RolePublisher
+	} else {
+		role = rtctokenbuilder.RoleSubscriber
+	}
+
+	expireTime64, parseErr := strconv.ParseUint(expireTime, 10, 64)
+	if parseErr != nil {
+		// if string conversion fails return an error
+		err = fmt.Errorf("failed to parse expireTime: %s, causing error: %s", expireTime, parseErr)
+	}
+
+	// set timestamps
+	expireTimeInSeconds := uint32(expireTime64)
+	currentTimestamp := uint32(time.Now().UTC().Unix())
+	expireTimestamp = currentTimestamp + expireTimeInSeconds
+
+	return channelName, tokentype, uidStr, role, expireTimestamp, err
+}
+
+func parseRtmParams(c *gin.Context) (uidStr string, expireTimestamp uint32, err error) {
+	// get param values
+	uidStr = c.Param("uid")
+	expireTime := c.DefaultQuery("expiry", "3600")
+
+	expireTime64, parseErr := strconv.ParseUint(expireTime, 10, 64)
+	if parseErr != nil {
+		// if string conversion fails return an error
+		err = fmt.Errorf("failed to parse expireTime: %s, causing error: %s", expireTime, parseErr)
+	}
+
+	// set timestamps
+	expireTimeInSeconds := uint32(expireTime64)
+	currentTimestamp := uint32(time.Now().UTC().Unix())
+	expireTimestamp = currentTimestamp + expireTimeInSeconds
+
+	// check if string conversion fails
+	return uidStr, expireTimestamp, err
+}
+
+func generateRtcToken(channelName, uidStr, tokentype string, role rtctokenbuilder.Role, expireTimestamp uint32) (rtcToken string, err error) {
+
+	if tokentype == "userAccount" {
+		log.Printf("Building Token with userAccount: %s\n", uidStr)
+		rtcToken, err = rtctokenbuilder.BuildTokenWithUserAccount(appID, appCertificate, channelName, uidStr, role, expireTimestamp)
+		return rtcToken, err
+
+	} else if tokentype == "uid" {
+		uid64, parseErr := strconv.ParseUint(uidStr, 10, 64)
+		// check if conversion fails
+		if parseErr != nil {
+			err = fmt.Errorf("failed to parse uidStr: %s, to uint causing error: %s", uidStr, parseErr)
+			return "", err
+		}
+
+		uid := uint32(uid64) // convert uid from uint64 to uint 32
+		log.Printf("Building Token with uid: %d\n", uid)
+		rtcToken, err = rtctokenbuilder.BuildTokenWithUID(appID, appCertificate, channelName, uid, role, expireTimestamp)
+		return rtcToken, err
+
+	} else {
+		err = fmt.Errorf("failed to generate RTC token for Unknown Tokentype: %s", tokentype)
+		log.Println(err)
+		return "", err
+	}
 }
