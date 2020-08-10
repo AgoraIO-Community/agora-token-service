@@ -8,6 +8,8 @@ github.com/AgoraIO-Community/go-tokenbuilder v0.0.0-20200801081258-5182eac06a6d 
 github.com/AgoraIO-Community/go-tokenbuilder v0.0.0-20200801081258-5182eac06a6d/go.mod h1:xqPdaiFG00M1hNN/CCYh8j+NTmkiJsQtqYdf4YAlncA=
 github.com/AgoraIO-Community/go-tokenbuilder v0.0.0-20200804022643-90cefe0c2a8b h1:ERkK01YGQRaduiA6Lnm0OCIKqcaa8owY0C50Beb8IHM=
 github.com/AgoraIO-Community/go-tokenbuilder v0.0.0-20200804022643-90cefe0c2a8b/go.mod h1:xqPdaiFG00M1hNN/CCYh8j+NTmkiJsQtqYdf4YAlncA=
+github.com/AgoraIO-Community/go-tokenbuilder v1.0.0 h1:R6L8a5u+p1qGpY5lNyQ19vRyDzIwhhqQnRlg9AAbqmA=
+github.com/AgoraIO-Community/go-tokenbuilder v1.0.0/go.mod h1:xqPdaiFG00M1hNN/CCYh8j+NTmkiJsQtqYdf4YAlncA=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/gin-contrib/sse v0.1.0 h1:Y/yl/+YNO8GZSjAhjMsSuLt29uWRFHdHYUb5lYOV9qE=
