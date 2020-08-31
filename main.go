@@ -101,8 +101,8 @@ func getRtmToken(c *gin.Context) {
 	rtmToken, tokenErr := rtmtokenbuilder.BuildToken(appID, appCertificate, uidStr, rtmtokenbuilder.RoleRtmUser, expireTimestamp)
 
 	if tokenErr != nil {
-		log.Println(err) // token failed to generate
-		c.Error(err)
+		log.Println(tokenErr) // token failed to generate
+		c.Error(tokenErr)
 		errMsg := "Error Generating RTM token: " + tokenErr.Error()
 		c.AbortWithStatusJSON(400, gin.H{
 			"error":  errMsg,
