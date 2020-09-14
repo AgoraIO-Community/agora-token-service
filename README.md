@@ -30,7 +30,7 @@ docker run -p 8080:8080 agora-token-service
 ```
 > run locally as a background service on port 8888
 ```
-docker run -p -d 8888:8080 agora-token-service
+docker run -d -p 8888:8080 agora-token-service
 ```
 
 ## Endpoints ##
