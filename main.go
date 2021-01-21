@@ -18,10 +18,10 @@ var appCertificate string
 func main() {
 
 	appIDEnv, appIDExists := os.LookupEnv("APP_ID")
-	appCertEnv, appCertExists := os.LookupEnv("APP_CERTIFICATE")
+	appCertEnv, appCertExists := os.LookupEnv("APP_CERT")
 
 	if !appIDExists || !appCertExists {
-		log.Fatal("FATAL ERROR: ENV not properly configured, check appID and appCertificate")
+		log.Fatal("FATAL ERROR: ENV not properly configured, check APP_ID and APP_CERT")
 	} else {
 		appID = appIDEnv
 		appCertificate = appCertEnv
