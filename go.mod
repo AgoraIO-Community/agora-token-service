@@ -1,6 +1,6 @@
-module github.com/AgoraIO-Community/agora-token-server
+module github.com/AgoraIO-Community/agora-token-service
 
-go 1.14
+go 1.16
 
 require (
 	github.com/AgoraIO-Community/go-tokenbuilder v1.0.0
