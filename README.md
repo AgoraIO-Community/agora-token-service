@@ -2,7 +2,7 @@
 ![Go](https://github.com/digitallysavvy/agora-token-server/workflows/Go/badge.svg?branch=master) ![Docker Image CI](https://github.com/digitallysavvy/agora-token-server/workflows/Docker%20Image%20CI/badge.svg?branch=master)   
 Written in Golang, using [Gin framework](https://github.com/gin-gonic/gin) to create a RESTful webservice for generating user tokens for use with the [Agora.io](https://www.agora.io) platform. 
 
-Agora.io Advanced Guide: [Token Management](https://docs.agora.io/en/Video/token_server_cpp?platform=CPP)
+Agora.io Advanced Guide: [Token Management](https://docs.agora.io/en/Video/token_server)
 
 ## How to Run ##
 Set the APP_ID and APP_CERT env variables.
