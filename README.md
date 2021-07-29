@@ -14,7 +14,7 @@ go run main.go
 #1. Open the `Dokerfile` and update the values for `APP_ID` and `APP_CERT`
 ```
 ENV APP_ID=""
-ENV APP_CERT=""
+ENV APP_CERTIFICATE=""
 ```
 #2. To build the container: 
 ```
