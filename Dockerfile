@@ -5,8 +5,8 @@ RUN apk add git ca-certificates --update
 
 # fetch dependancies from github (Gin and Agora Token Service)
 RUN go get github.com/gin-gonic/gin
-RUN go get github.com/AgoraIO-Community/agora-token-service
-# ADD . /go/src/github.com/AgoraIO-Community/agora-token-service
+# RUN go get github.com/AgoraIO-Community/agora-token-service
+ADD . /go/src/github.com/AgoraIO-Community/agora-token-service
 
 ENV APP_ID=""
 ENV APP_CERTIFICATE=""
