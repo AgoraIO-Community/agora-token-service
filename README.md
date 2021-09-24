@@ -8,7 +8,11 @@ Agora.io Advanced Guide: [Token Management](https://docs.agora.io/en/Video/token
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
 ## How to Run ##
-Set the APP_ID and APP_CERT env variables.
+Set the APP_ID and APP_CERTIFICATE env variables.
+```bash
+cp .env.example .env
+```
+
 ```go
 go run main.go
 ```
