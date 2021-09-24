@@ -4,6 +4,9 @@ Written in Golang, using [Gin framework](https://github.com/gin-gonic/gin) to cr
 
 Agora.io Advanced Guide: [Token Management](https://docs.agora.io/en/Video/token_server_cpp?platform=CPP)
 
+## Deploy to Heroku ##
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+
 ## How to Run ##
 Set the APP_ID and APP_CERT env variables.
 ```go
