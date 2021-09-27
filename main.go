@@ -10,10 +10,18 @@ import (
 	"github.com/AgoraIO-Community/go-tokenbuilder/rtctokenbuilder"
 	"github.com/AgoraIO-Community/go-tokenbuilder/rtmtokenbuilder"
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 var appID string
 var appCertificate string
+
+func init() {
+	// loads values from .env into the system
+	if err := godotenv.Load(); err != nil {
+		log.Print("No .env file found")
+	}
+}
 
 func main() {
 
