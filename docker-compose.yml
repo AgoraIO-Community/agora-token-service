@@ -1,0 +1,21 @@
+version: "3.9"
+services:
+  app:
+    build:
+      dockerfile: Dockerfile
+      context: .
+    environment:
+      - VIRTUAL_HOST=drr-tokens.cubezoodev.co.za
+      - LETSENCRYPT_HOST=drr-tokens.cubezoodev.co.za
+      - LETSENCRYPT_EMAIL=info@drr-tokens.cubezoodev.co.za
+    ports:
+    - "3000:8080"
+    restart: "always"
+    networks:
+      external:
+        aliases:
+          - webproxy
+
+networks:
+  external:
+    name: webproxy
