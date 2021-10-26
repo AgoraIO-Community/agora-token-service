@@ -8,7 +8,7 @@ RUN go get github.com/gin-gonic/gin
 # RUN go get github.com/AgoraIO-Community/agora-token-service
 ADD . /go/src/github.com/AgoraIO-Community/agora-token-service
 
-ENV APP_ID=""
+ENV APP_ID="" 
 ENV APP_CERTIFICATE=""
 
 # move to the working directory

@@ -29,6 +29,32 @@ docker run agora-token-service
 docker run -p 8080:8080 agora-token-service
 ```
 
+## Docker Compose ##
+#1. Open the `Dokerfile` and update the values for `APP_ID` and `APP_CERT`
+```
+ENV APP_ID=""
+ENV APP_CERTIFICATE=""
+```
+#2. To build the container: 
+```
+docker-compose build
+```
+#3. Run the container with logs
+```
+docker-compose up
+```
+
+#4. Run the container in daemon mode
+
+```
+docker-compose up -d
+```
+
+> Note: for testing locally
+```
+docker run -p 8080:8080 agora-token-service
+```
+
 ## Endpoints ##
 
 ### Ping ###
