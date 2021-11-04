@@ -5,13 +5,13 @@ Written in Golang, using [Gin framework](https://github.com/gin-gonic/gin) to cr
 Agora.io Advanced Guide: [Token Management](https://docs.agora.io/en/Video/token_server)
 
 ## How to Run ##
-Set the APP_ID and APP_CERT env variables.
+Set the APP_ID and APP_CERTIFICATE env variables.
 ```go
 go run main.go
 ```
 
 ## Docker ##
-#1. Open the `Dokerfile` and update the values for `APP_ID` and `APP_CERT`
+#1. Open the `Dokerfile` and update the values for `APP_ID` and `APP_CERTIFICATE`
 ```
 ENV APP_ID=""
 ENV APP_CERTIFICATE=""
