@@ -4,8 +4,15 @@ Written in Golang, using [Gin framework](https://github.com/gin-gonic/gin) to cr
 
 Agora.io Advanced Guide: [Token Management](https://docs.agora.io/en/Video/token_server)
 
+## Deploy to Heroku ##
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://www.heroku.com/deploy/?template=https://github.com/AgoraIO-Community/agora-token-service)
+
 ## How to Run ##
-Set the APP_ID and APP_CERT env variables.
+Set the APP_ID and APP_CERTIFICATE env variables.
+```bash
+cp .env.example .env
+```
+
 ```go
 go run main.go
 ```
