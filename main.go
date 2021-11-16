@@ -37,6 +37,11 @@ func main() {
 
 	api := gin.Default()
 
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
 	api.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"message": "pong",
@@ -47,7 +52,7 @@ func main() {
 	api.GET("rtc/:channelName/:role/:tokentype/:uid/", getRtcToken)
 	api.GET("rtm/:uid/", getRtmToken)
 	api.GET("rte/:channelName/:role/:tokentype/:uid/", getBothTokens)
-	api.Run(":8080") // listen and serve on localhost:8080
+	api.Run(":" + port) // listen and serve on localhost:8080
 }
 
 func nocache() gin.HandlerFunc {
