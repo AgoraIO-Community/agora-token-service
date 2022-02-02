@@ -4,17 +4,15 @@ FROM golang:alpine
 RUN apk add git ca-certificates --update
 
 # fetch dependancies github
-RUN go get github.com/gin-gonic/gin
-# RUN go get github.com/digitallysavvy/agora-token-server
-ADD . /go/src/github.com/digitallysavvy/agora-token-server 
+RUN go get go.mod 
 
 ENV APP_ID=""
 ENV APP_CERTIFICATE=""
 
 # move to the working directory
-WORKDIR $GOPATH/src/github.com/digitallysavvy/agora-token-server
+WORKDIR $GOPATH/src/github.com/AgoraIO-Community/agora-token-server
 # Build the token server command inside the container.
-RUN go build
+RUN go build -o agora-token-server -v cmd/main.go
 # RUN go run main.go
 # Run the token server by default when the container starts.
 ENTRYPOINT ./agora-token-server
