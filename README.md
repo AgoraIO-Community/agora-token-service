@@ -103,6 +103,7 @@ response:
 
 ## Media Encryption Secret ##
 The `secret` endpoint generates a random 32 bytes hex string as secret for Media Encryption.
+
 **endpoint structure**
 ```
 /secret
@@ -115,6 +116,7 @@ response:
 
 ## Media Encryption Seed ##
 The `seed` endpoint generates a random 32 bytes base64 string as secret for Media Encryption.
+
 **endpoint structure**
 ```
 /seed
