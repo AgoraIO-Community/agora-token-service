@@ -259,7 +259,7 @@ func getChannelSecret(c *gin.Context) {
 	log.Printf("Channel Secret\n")
 
 	hexStr := randomHex(32)
-	log.Println("Secret generated: %s", hexStr)
+	log.Printf("Secret generated: %s", hexStr)
 
 	c.JSON(200, gin.H{
 		"message": hexStr,
@@ -270,7 +270,7 @@ func getChannelSeed(c *gin.Context) {
 	log.Printf("Channel Seed\n")
 
 	base64Str := randomBase64(32)
-	log.Println("Seed generated: %s", base64Str)
+	log.Printf("Seed generated: %s", base64Str)
 
 	c.JSON(200, gin.H{
 		"message": base64Str,
