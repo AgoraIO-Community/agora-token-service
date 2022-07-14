@@ -11,6 +11,10 @@ import (
 	"github.com/AgoraIO-Community/go-tokenbuilder/rtmtokenbuilder"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+
+	"crypto/rand"
+	"encoding/base64"
+	"encoding/hex"
 )
 
 var appID string
@@ -52,6 +56,9 @@ func main() {
 	api.GET("rtc/:channelName/:role/:tokentype/:uid/", getRtcToken)
 	api.GET("rtm/:uid/", getRtmToken)
 	api.GET("rte/:channelName/:role/:tokentype/:uid/", getBothTokens)
+	api.GET("secret", getChannelSecret)
+	api.GET("seed", getChannelSeed)
+
 	api.Run(":" + port) // listen and serve on localhost:8080
 }
 
@@ -246,4 +253,38 @@ func generateRtcToken(channelName, uidStr, tokentype string, role rtctokenbuilde
 		log.Println(err)
 		return "", err
 	}
+}
+
+func getChannelSecret(c *gin.Context) {
+	log.Printf("Channel Secret\n")
+
+	hexStr := randomHex(32)
+	log.Println("Secret generated: %s", hexStr)
+
+	c.JSON(200, gin.H{
+		"message": hexStr,
+	})
+}
+
+func getChannelSeed(c *gin.Context) {
+	log.Printf("Channel Seed\n")
+
+	base64Str := randomBase64(32)
+	log.Println("Seed generated: %s", base64Str)
+
+	c.JSON(200, gin.H{
+		"message": base64Str,
+	})
+}
+
+func randomHex(n int) string {
+	bytes := make([]byte, n)
+	rand.Read(bytes)
+	return hex.EncodeToString(bytes)
+}
+
+func randomBase64(n int) string {
+	bytes := make([]byte, n)
+	rand.Read(bytes)
+	return base64.StdEncoding.EncodeToString(bytes)
 }

@@ -100,3 +100,8 @@ response:
   "rtmToken":" " 
 } 
 ```
+
+## Channel Encryption Secret ##
+
+
+## Channel Encryption Seed ##
