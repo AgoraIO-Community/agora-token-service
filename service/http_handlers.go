@@ -9,7 +9,7 @@ import (
 )
 
 func (s *Service) getRtcToken(c *gin.Context) {
-	log.Printf("rtc token\n")
+	log.Println("Generating RTC token")
 	// get param values
 	channelName, tokentype, uidStr, role, expireTimestamp, err := s.parseRtcParams(c)
 
@@ -41,7 +41,7 @@ func (s *Service) getRtcToken(c *gin.Context) {
 }
 
 func (s *Service) getRtmToken(c *gin.Context) {
-	log.Println("Generating RTM Token")
+	log.Println("Generating RTM token")
 	// get param values
 	uidStr, expireTimestamp, err := s.parseRtmParams(c)
 
@@ -73,7 +73,7 @@ func (s *Service) getRtmToken(c *gin.Context) {
 }
 
 func (s *Service) getBothTokens(c *gin.Context) {
-	log.Printf("dual token\n")
+	log.Println("Generating RTC and RTM tokens")
 	// get rtc param values
 	channelName, tokentype, uidStr, role, expireTimestamp, rtcParamErr := s.parseRtcParams(c)
 
