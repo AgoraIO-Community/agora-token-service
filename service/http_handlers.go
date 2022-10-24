@@ -41,7 +41,7 @@ func (s *Service) getRtcToken(c *gin.Context) {
 }
 
 func (s *Service) getRtmToken(c *gin.Context) {
-	log.Printf("rtm token\n")
+	log.Println("Generating RTM Token")
 	// get param values
 	uidStr, expireTimestamp, err := s.parseRtmParams(c)
 

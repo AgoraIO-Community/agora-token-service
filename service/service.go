@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 // Service is Ravelin backend service
@@ -47,10 +48,14 @@ func (s *Service) Start() {
 // NewService returns a Service pointer with all configurations set
 func NewService() *Service {
 
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
 	appIDEnv, appIDExists := os.LookupEnv("APP_ID")
 	appCertEnv, appCertExists := os.LookupEnv("APP_CERTIFICATE")
 	serverPort, serverPortExists := os.LookupEnv("SERVER_PORT")
-	if !appIDExists || !appCertExists {
+	if !appIDExists || !appCertExists || len(appIDEnv) == 0 || len(appCertEnv) == 0 {
 		log.Fatal("FATAL ERROR: ENV not properly configured, check APP_ID and APP_CERTIFICATE")
 	}
 	if !serverPortExists {

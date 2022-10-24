@@ -13,7 +13,7 @@ func (s *Service) parseRtcParams(c *gin.Context) (channelName, tokentype, uidStr
 	// get param values
 	channelName = c.Param("channelName")
 	roleStr := c.Param("role")
-	tokentype = c.Param("tokenType")
+	tokentype = c.Param("tokentype")
 	uidStr = c.Param("uid")
 
 	if uidStr == "" {
