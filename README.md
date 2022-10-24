@@ -5,6 +5,10 @@ Written in Golang, using [Gin framework](https://github.com/gin-gonic/gin) to cr
 
 Agora.io Advanced Guide: [Token Management](https://docs.agora.io/en/Video/token_server)
 
+## Deploy to Railway.app ##
+
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/NKYzQA?referralCode=waRWUT)
+
 ## Deploy to Heroku ##
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://www.heroku.com/deploy/?template=https://github.com/AgoraIO-Community/agora-token-service)
 
@@ -28,7 +32,7 @@ APP_ID=app_id APP_CERTIFICATE=app_cert go run cmd/main.go
 
 ---
 
-The pre-compiled binaries are also available in [releases](https://github.com/maxxfrazer/agora-token-service/releases).
+The pre-compiled binaries are also available in [releases](https://github.com/AgoraIO-Community/agora-token-service/releases).
 
 ## Docker ##
 
