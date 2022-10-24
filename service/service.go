@@ -50,16 +50,22 @@ func NewService() *Service {
 
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		log.Println("Error loading .env file")
 	}
 	appIDEnv, appIDExists := os.LookupEnv("APP_ID")
 	appCertEnv, appCertExists := os.LookupEnv("APP_CERTIFICATE")
 	serverPort, serverPortExists := os.LookupEnv("SERVER_PORT")
 	if !appIDExists || !appCertExists || len(appIDEnv) == 0 || len(appCertEnv) == 0 {
-		log.Fatal("FATAL ERROR: ENV not properly configured, check APP_ID and APP_CERTIFICATE")
+		log.Fatal("FATAL ERROR: ENV not properly configured, check .env file or APP_ID and APP_CERTIFICATE")
 	}
-	if !serverPortExists {
-		serverPort = "8080"
+	if !serverPortExists || len(serverPort) == 0 {
+		// Check $PORT, this is used by Railway.
+		port, portExists := os.LookupEnv("PORT")
+		if portExists && len(port) > 0 {
+			serverPort = port
+		} else {
+			serverPort = "8080"
+		}
 	}
 
 	s := &Service{
