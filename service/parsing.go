@@ -9,11 +9,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (s *Service) parseRtcParams(c *gin.Context) (channelName, tokentype, uidStr string, role rtctokenbuilder.Role, expireTimestamp uint32, err error) {
+func (s *Service) parseRtcParams(c *gin.Context) (channelName, tokenType, uidStr string, role rtctokenbuilder.Role, expireTimestamp uint32, err error) {
 	// get param values
 	channelName = c.Param("channelName")
 	roleStr := c.Param("role")
-	tokentype = c.Param("tokentype")
+	tokenType = c.Param("tokenType")
 	uidStr = c.Param("uid")
 
 	if uidStr == "" {
@@ -41,7 +41,7 @@ func (s *Service) parseRtcParams(c *gin.Context) (channelName, tokentype, uidStr
 	currentTimestamp := uint32(time.Now().UTC().Unix())
 	expireTimestamp = currentTimestamp + expireTimeInSeconds
 
-	return channelName, tokentype, uidStr, role, expireTimestamp, err
+	return channelName, tokenType, uidStr, role, expireTimestamp, err
 }
 
 func (s *Service) parseRtmParams(c *gin.Context) (uidStr string, expireTimestamp uint32, err error) {

@@ -11,7 +11,7 @@ import (
 func (s *Service) getRtcToken(c *gin.Context) {
 	log.Println("Generating RTC token")
 	// get param values
-	channelName, tokentype, uidStr, role, expireTimestamp, err := s.parseRtcParams(c)
+	channelName, tokenType, uidStr, role, expireTimestamp, err := s.parseRtcParams(c)
 
 	if err != nil {
 		c.Error(err)
@@ -22,7 +22,7 @@ func (s *Service) getRtcToken(c *gin.Context) {
 		return
 	}
 
-	rtcToken, tokenErr := s.generateRtcToken(channelName, uidStr, tokentype, role, expireTimestamp)
+	rtcToken, tokenErr := s.generateRtcToken(channelName, uidStr, tokenType, role, expireTimestamp)
 
 	if tokenErr != nil {
 		log.Println(tokenErr) // token failed to generate
@@ -75,7 +75,7 @@ func (s *Service) getRtmToken(c *gin.Context) {
 func (s *Service) getBothTokens(c *gin.Context) {
 	log.Println("Generating RTC and RTM tokens")
 	// get rtc param values
-	channelName, tokentype, uidStr, role, expireTimestamp, rtcParamErr := s.parseRtcParams(c)
+	channelName, tokenType, uidStr, role, expireTimestamp, rtcParamErr := s.parseRtcParams(c)
 
 	if rtcParamErr != nil {
 		c.Error(rtcParamErr)
@@ -86,7 +86,7 @@ func (s *Service) getBothTokens(c *gin.Context) {
 		return
 	}
 	// generate the rtcToken
-	rtcToken, rtcTokenErr := s.generateRtcToken(channelName, uidStr, tokentype, role, expireTimestamp)
+	rtcToken, rtcTokenErr := s.generateRtcToken(channelName, uidStr, tokenType, role, expireTimestamp)
 	// generate rtmToken
 	rtmToken, rtmTokenErr := rtmtokenbuilder.BuildToken(s.appID, s.appCertificate, uidStr, rtmtokenbuilder.RoleRtmUser, expireTimestamp)
 

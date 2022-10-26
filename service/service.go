@@ -79,9 +79,9 @@ func NewService() *Service {
 
 	api := gin.Default()
 
-	api.GET("rtc/:channelName/:role/:tokentype/:uid/", s.getRtcToken)
+	api.GET("rtc/:channelName/:role/:tokenType/:uid/", s.getRtcToken)
 	api.GET("rtm/:uid/", s.getRtmToken)
-	api.GET("rte/:channelName/:role/:tokentype/:uid/", s.getBothTokens)
+	api.GET("rte/:channelName/:role/:tokenType/:uid/", s.getBothTokens)
 
 	s.Server.Handler = api
 	return s
