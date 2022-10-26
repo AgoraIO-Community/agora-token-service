@@ -65,12 +65,12 @@ response:
 ```
 
 ### RTC Token ###
-The `rtc` token endpoint requires a `tokentype` (uid || userAccount), `channelName`, and the user's `uid` (type varies based on `tokentype`). 
+The `rtc` token endpoint requires a `tokenType` (uid || userAccount), `channelName`, and the user's `uid` (type varies based on `tokenType`). 
 `(optional)` Pass an integer to represent the token lifetime in seconds.
 
 **endpoint structure** 
 ```
-/rtc/:channelName/:role/:tokentype/:uid/?expireTime
+/rtc/:channelName/:role/:tokenType/:uid/?expireTime
 ```
 
 response:
@@ -92,12 +92,12 @@ response:
 ```
 
 ### Both Tokens ###
-The `rte` token endpoint generates both the `rtc` and `rtm` tokens with a single request. This endpoint requires a `tokentype` (uid || userAccount), `channelName`, and the user's `uid` (type varies `String/Int` based on `tokentype`). 
+The `rte` token endpoint generates both the `rtc` and `rtm` tokens with a single request. This endpoint requires a `tokenType` (uid || userAccount), `channelName`, and the user's `uid` (type varies `String/Int` based on `tokenType`). 
 `(optional)` Pass an integer to represent the token lifetime in seconds.
 
 **endpoint structure** 
 ```
-/rte/:channelName/:role/:tokentype/:uid/?expireTime
+/rte/:channelName/:role/:tokenType/:uid/?expireTime
 ```
 
 response:

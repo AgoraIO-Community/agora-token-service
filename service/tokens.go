@@ -8,14 +8,14 @@ import (
 	"github.com/AgoraIO-Community/go-tokenbuilder/rtctokenbuilder"
 )
 
-func (s *Service) generateRtcToken(channelName, uidStr, tokentype string, role rtctokenbuilder.Role, expireTimestamp uint32) (rtcToken string, err error) {
+func (s *Service) generateRtcToken(channelName, uidStr, tokenType string, role rtctokenbuilder.Role, expireTimestamp uint32) (rtcToken string, err error) {
 
-	if tokentype == "userAccount" {
+	if tokenType == "userAccount" {
 		log.Printf("Building Token with userAccount: %s\n", uidStr)
 		rtcToken, err = rtctokenbuilder.BuildTokenWithUserAccount(s.appID, s.appCertificate, channelName, uidStr, role, expireTimestamp)
 		return rtcToken, err
 
-	} else if tokentype == "uid" {
+	} else if tokenType == "uid" {
 		uid64, parseErr := strconv.ParseUint(uidStr, 10, 64)
 		// check if conversion fails
 		if parseErr != nil {
@@ -28,7 +28,7 @@ func (s *Service) generateRtcToken(channelName, uidStr, tokentype string, role r
 		rtcToken, err = rtctokenbuilder.BuildTokenWithUID(s.appID, s.appCertificate, channelName, uid, role, expireTimestamp)
 		return rtcToken, err
 	} else {
-		err = fmt.Errorf("failed to generate RTC token for Unknown Tokentype: %s", tokentype)
+		err = fmt.Errorf("failed to generate RTC token for Unknown Tokentype: %s", tokenType)
 		log.Println(err)
 		return "", err
 	}
