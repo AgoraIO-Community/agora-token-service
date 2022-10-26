@@ -3,12 +3,12 @@
 FROM golang:alpine
 RUN apk add git ca-certificates --update
 
-# fetch dependancies github
+# fetch dependencies github
 # RUN go get -u github.com/gin-gonic/gin
 
 ADD . /go/src/github.com/AgoraIO-Community/agora-token-service
 
-# # fetch dependancies from github (Gin and Agora Token Service)
+# # fetch dependencies from github (Gin and Agora Token Service)
 # RUN go install github.com/gin-gonic/gin@latest
 # # RUN go install github.com/AgoraIO-Community/agora-token-service
 # ADD . /go/src/github.com/AgoraIO-Community/agora-token-service
