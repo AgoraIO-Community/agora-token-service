@@ -4,7 +4,7 @@ before:
 builds:
   - binary: agora-token-service
     id: agora-token-service
-    main: ./main.go
+    main: ./cmd/main.go
     goos:
       - windows
       - darwin

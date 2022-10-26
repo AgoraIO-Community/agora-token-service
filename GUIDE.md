@@ -13,12 +13,12 @@ Agora offers token security for both its RTC and RTM SDKs. This guide will expla
 ## Project Setup ##
 To start, let’s open our terminal and create a new folder for our project and cd into it.
 ```sh
-mkdir agora-token-server
-cd agora-token-server
+mkdir agora-token-service
+cd agora-token-service
 ```
 Now that the project has been created, let’s initialize the project’s Go module.
 ```
-go mod init agora-token-server
+go mod init agora-token-service
 ```
 Lastly, we’ll use `go get` to add our Gin and Agora dependencies.
 ```
@@ -248,7 +248,7 @@ func parseRtcParams(c *gin.Context) (channelName, tokenType, uidStr string, role
   expireTime64, parseErr := strconv.ParseUint(expireTime, 10, 64)
   if parseErr != nil {
     // if string conversion fails return an error
-    err = fmt.Errorf("failed to parse expireTime: %s, causing error: %s", expireTime, parseErr)
+    err = fmt.Errorf("failed to parse expiry: %s, causing error: %s", expireTime, parseErr)
   }
 
   // set timestamps
@@ -335,7 +335,7 @@ func parseRtmParams(c *gin.Context) (uidStr string, expireTimestamp uint32, err 
   expireTime64, parseErr := strconv.ParseUint(expireTime, 10, 64)
   if parseErr != nil {
     // if string conversion fails return an error
-    err = fmt.Errorf("failed to parse expireTime: %s, causing error: %s", expireTime, parseErr)
+    err = fmt.Errorf("failed to parse expiry: %s, causing error: %s", expireTime, parseErr)
   }
 
   // set timestamps
