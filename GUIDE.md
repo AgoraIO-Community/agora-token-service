@@ -13,12 +13,12 @@ Agora offers token security for both its RTC and RTM SDKs. This guide will expla
 ## Project Setup ##
 To start, let’s open our terminal and create a new folder for our project and cd into it.
 ```sh
-mkdir agora-token-server
-cd agora-token-server
+mkdir agora-token-service
+cd agora-token-service
 ```
 Now that the project has been created, let’s initialize the project’s Go module.
 ```
-go mod init agora-token-server
+go mod init agora-token-service
 ```
 Lastly, we’ll use `go get` to add our Gin and Agora dependencies.
 ```
@@ -115,12 +115,12 @@ func main() {
 ```
 Next we will add 3 endpoints, one for RTC tokens, another for RTM tokens, and one that returns both tokens.
 
-The RTC token will require a channel name, the UID, the user role, tokentype to distinguish between string and integer based UIDs, and lastly an expiration time. The RTM endpoint only requires a UID and an expiration time. The dual token endpoint will need to accept the same structure as the RTC token endpoint.
+The RTC token will require a channel name, the UID, the user role, tokenType to distinguish between string and integer based UIDs, and lastly an expiration time. The RTM endpoint only requires a UID and an expiration time. The dual token endpoint will need to accept the same structure as the RTC token endpoint.
 
 ```go
-api.GET("rtc/:channelName/:role/:tokentype/:uid/", getRtcToken)
+api.GET("rtc/:channelName/:role/:tokenType/:uid/", getRtcToken)
 api.GET("rtm/:uid/", getRtmToken)
-api.GET("rte/:channelName/:role/:tokentype/:uid/", getBothTokens)
+api.GET("rte/:channelName/:role/:tokenType/:uid/", getBothTokens)
 ```
 
 To minimize the amount of repeated code, the three functions `getRtcToken`, `getRtmToken`, and `getBothTokens` will call separate functions (`parseRtcParams`/`parseRtmParams`) to validate and extract the values passed to each endpoint. Then each function will use the returned values to generate the tokens and return them as JSON in the response `body`.
@@ -180,7 +180,7 @@ func getBothTokens(c *gin.Context) {
 
 }
 
-func parseRtcParams(c *gin.Context) (channelName, tokentype, uidStr string, role rtctokenbuilder.Role, expireTimestamp uint32, err error) {
+func parseRtcParams(c *gin.Context) (channelName, tokenType, uidStr string, role rtctokenbuilder.Role, expireTimestamp uint32, err error) {
 
 }
 
@@ -188,7 +188,7 @@ func parseRtmParams(c *gin.Context) (uidStr string, expireTimestamp uint32, err 
 
 }
 
-func generateRtcToken(channelName, uidStr, tokentype string, role rtctokenbuilder.Role, expireTimestamp uint32) (rtcToken string, err error) {
+func generateRtcToken(channelName, uidStr, tokenType string, role rtctokenbuilder.Role, expireTimestamp uint32) (rtcToken string, err error) {
 
 }
 ```
@@ -199,7 +199,7 @@ We’ll start with `getRtcToken`. This function takes a reference to the `gin.Co
 func getRtcToken(c *gin.Context) {
   log.Printf("rtc token\n")
   // get param values
-  channelName, tokentype, uidStr, role, expireTimestamp, err := parseRtcParams(c)
+  channelName, tokenType, uidStr, role, expireTimestamp, err := parseRtcParams(c)
 
   if err != nil {
     c.Error(err)
@@ -210,7 +210,7 @@ func getRtcToken(c *gin.Context) {
     return
   }
 
-  rtcToken, tokenErr := generateRtcToken(channelName, uidStr, tokentype, role, expireTimestamp)
+  rtcToken, tokenErr := generateRtcToken(channelName, uidStr, tokenType, role, expireTimestamp)
 
   if tokenErr != nil {
     log.Println(tokenErr) // token failed to generate
@@ -231,11 +231,11 @@ func getRtcToken(c *gin.Context) {
 Next let’s fill in `parseRtcParams`. This function also takes a reference to the gin.Context, which we’ll use to extract the parameters and return them. You’ll notice `parseRtcParams` also returns an error in case we run into any issues we can return an error message.
 ```go
 
-func parseRtcParams(c *gin.Context) (channelName, tokentype, uidStr string, role rtctokenbuilder.Role, expireTimestamp uint32, err error) {
+func parseRtcParams(c *gin.Context) (channelName, tokenType, uidStr string, role rtctokenbuilder.Role, expireTimestamp uint32, err error) {
   // get param values
   channelName = c.Param("channelName")
   roleStr := c.Param("role")
-  tokentype = c.Param("tokentype")
+  tokenType = c.Param("tokenType")
   uidStr = c.Param("uid")
   expireTime := c.DefaultQuery("expiry", "3600")
 
@@ -248,7 +248,7 @@ func parseRtcParams(c *gin.Context) (channelName, tokentype, uidStr string, role
   expireTime64, parseErr := strconv.ParseUint(expireTime, 10, 64)
   if parseErr != nil {
     // if string conversion fails return an error
-    err = fmt.Errorf("failed to parse expireTime: %s, causing error: %s", expireTime, parseErr)
+    err = fmt.Errorf("failed to parse expiry: %s, causing error: %s", expireTime, parseErr)
   }
 
   // set timestamps
@@ -256,21 +256,21 @@ func parseRtcParams(c *gin.Context) (channelName, tokentype, uidStr string, role
   currentTimestamp := uint32(time.Now().UTC().Unix())
   expireTimestamp = currentTimestamp + expireTimeInSeconds
 
-  return channelName, tokentype, uidStr, role, expireTimestamp, err
+  return channelName, tokenType, uidStr, role, expireTimestamp, err
 }
 ```
 Lastly, we’ll fill in the `generateRtcToken` function. This function takes the channel name, the UID as a _String_, the type of token (`uid` or `userAccount`), the role, and the expire time.
 
 Using these values, the function calls the appropriate [Agora RTC Token Builder](https://github.com/AgoraIO-Community/go-tokenbuilder/blob/master/rtctokenbuilder/RtcTokenBuilder.go) function (`BuildTokenWithUserAccount`/`BuildTokenWithUID`) to generate a token _String_. Once the token builder function returns we’ll first check for errors and if there aren’t any we’ll return the token _String_ value.
 ```go
-func generateRtcToken(channelName, uidStr, tokentype string, role rtctokenbuilder.Role, expireTimestamp uint32) (rtcToken string, err error) {
+func generateRtcToken(channelName, uidStr, tokenType string, role rtctokenbuilder.Role, expireTimestamp uint32) (rtcToken string, err error) {
 
-  if tokentype == "userAccount" {
+  if tokenType == "userAccount" {
     log.Printf("Building Token with userAccount: %s\n", uidStr)
     rtcToken, err = rtctokenbuilder.BuildTokenWithUserAccount(appID, appCertificate, channelName, uidStr, role, expireTimestamp)
     return rtcToken, err
 
-  } else if tokentype == "uid" {
+  } else if tokenType == "uid" {
     uid64, parseErr := strconv.ParseUint(uidStr, 10, 64)
     // check if conversion fails
     if parseErr != nil {
@@ -284,7 +284,7 @@ func generateRtcToken(channelName, uidStr, tokentype string, role rtctokenbuilde
     return rtcToken, err
 
   } else {
-    err = fmt.Errorf("failed to generate RTC token for Unknown Tokentype: %s", tokentype)
+    err = fmt.Errorf("failed to generate RTC token for Unknown Tokentype: %s", tokenType)
     log.Println(err)
     return "", err
   }
@@ -335,7 +335,7 @@ func parseRtmParams(c *gin.Context) (uidStr string, expireTimestamp uint32, err 
   expireTime64, parseErr := strconv.ParseUint(expireTime, 10, 64)
   if parseErr != nil {
     // if string conversion fails return an error
-    err = fmt.Errorf("failed to parse expireTime: %s, causing error: %s", expireTime, parseErr)
+    err = fmt.Errorf("failed to parse expiry: %s, causing error: %s", expireTime, parseErr)
   }
 
   // set timestamps
@@ -353,7 +353,7 @@ Now that we are able to generate both RTC and RTM tokens with individual server 
 func getBothTokens(c *gin.Context) {
   log.Printf("dual token\n")
   // get rtc param values
-  channelName, tokentype, uidStr, role, expireTimestamp, rtcParamErr := parseRtcParams(c)
+  channelName, tokenType, uidStr, role, expireTimestamp, rtcParamErr := parseRtcParams(c)
 
   if rtcParamErr != nil {
     c.Error(rtcParamErr)
@@ -364,7 +364,7 @@ func getBothTokens(c *gin.Context) {
     return
   }
   // generate the rtcToken
-  rtcToken, rtcTokenErr := generateRtcToken(channelName, uidStr, tokentype, role, expireTimestamp)
+  rtcToken, rtcTokenErr := generateRtcToken(channelName, uidStr, tokenType, role, expireTimestamp)
   // generate rtmToken
   rtmToken, rtmTokenErr := rtmtokenbuilder.BuildToken(appID, appCertificate, uidStr, rtmtokenbuilder.RoleRtmUser, expireTimestamp)
 
