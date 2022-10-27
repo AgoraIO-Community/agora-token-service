@@ -9,6 +9,12 @@ Agora Advanced Guide: [Token Management](https://docs.agora.io/en/video-calling/
 
 [![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/NKYzQA?referralCode=waRWUT)
 
+## Deploy to Render ##
+
+<a href="https://render.com/deploy?repo=https://github.com/AgoraIO-Community/agora-token-service">
+  <img src="https://render.com/images/deploy-to-render-button.svg" alt="Deploy to Render">
+</a>
+
 ## Deploy to Heroku ##
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://www.heroku.com/deploy/?template=https://github.com/AgoraIO-Community/agora-token-service)
 
