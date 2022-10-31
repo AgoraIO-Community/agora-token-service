@@ -1,0 +1,7 @@
+setup:
+  config:
+    APP_ID: my-agora-app-id
+    APP_CERTIFICATE: my-agora-app-certificate
+build:
+  docker:
+    web: Dockerfile
