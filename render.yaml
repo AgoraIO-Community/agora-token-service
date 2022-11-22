@@ -4,6 +4,7 @@ services:
     env: docker
     repo: https://github.com/AgoraIO-Community/agora-token-service.git
     rootDir: .
+    plan: free
     envVars:
       - key: APP_ID
         sync: false
