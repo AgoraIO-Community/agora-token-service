@@ -1,6 +1,7 @@
 package service
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/AgoraIO-Community/go-tokenbuilder/rtmtokenbuilder"
@@ -77,6 +78,9 @@ func (s *Service) getRtcRtmToken(c *gin.Context) {
 	// get rtc param values
 	channelName, tokenType, uidStr, rtmuid, role, expireTimestamp, rtcParamErr := s.parseRtcParams(c)
 
+	if rtcParamErr == nil && rtmuid == "" {
+		rtcParamErr = fmt.Errorf("failed to parse rtm user ID. Cannot be empty or \"0\"")
+	}
 	if rtcParamErr != nil {
 		c.Error(rtcParamErr)
 		c.AbortWithStatusJSON(400, gin.H{
