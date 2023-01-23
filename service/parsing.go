@@ -63,6 +63,10 @@ func (s *Service) parseRtmParams(c *gin.Context) (uidStr string, expireTimestamp
 		err = fmt.Errorf("failed to parse expireTime: %s, causing error: %s", expireTime, parseErr)
 	}
 
+	if uidStr == "" || uidStr == "0" {
+		err = fmt.Errorf("Invalid RTM User ID: \"%s\"", uidStr)
+	}
+
 	// set timestamps
 	expireTimeInSeconds := uint32(expireTime64)
 	currentTimestamp := uint32(time.Now().UTC().Unix())
