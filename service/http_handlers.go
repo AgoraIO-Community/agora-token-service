@@ -95,7 +95,6 @@ func (s *Service) getRtcRtmToken(c *gin.Context) {
 	rtmToken, rtmTokenErr := rtmtokenbuilder.BuildToken(s.appID, s.appCertificate, rtmuid, rtmtokenbuilder.RoleRtmUser, expireTimestamp)
 
 	if rtcTokenErr != nil {
-		log.Println(rtcTokenErr) // token failed to generate
 		c.Error(rtcTokenErr)
 		errMsg := "Error Generating RTC token - " + rtcTokenErr.Error()
 		c.AbortWithStatusJSON(400, gin.H{
@@ -103,7 +102,6 @@ func (s *Service) getRtcRtmToken(c *gin.Context) {
 			"error":  errMsg,
 		})
 	} else if rtmTokenErr != nil {
-		log.Println(rtmTokenErr) // token failed to generate
 		c.Error(rtmTokenErr)
 		errMsg := "Error Generating RTC token - " + rtmTokenErr.Error()
 		c.AbortWithStatusJSON(400, gin.H{
