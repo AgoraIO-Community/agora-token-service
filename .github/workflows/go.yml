@@ -34,4 +34,4 @@ jobs:
       run: go build -v cmd/main.go
 
     - name: Test
-      run: go test -v cmd/main.go
+      run: go test -cover github.com/AgoraIO-Community/agora-token-service/service

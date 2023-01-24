@@ -1,6 +1,7 @@
 package service
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/AgoraIO-Community/go-tokenbuilder/rtmtokenbuilder"
@@ -57,7 +58,6 @@ func (s *Service) getRtmToken(c *gin.Context) {
 	rtmToken, tokenErr := rtmtokenbuilder.BuildToken(s.appID, s.appCertificate, uidStr, rtmtokenbuilder.RoleRtmUser, expireTimestamp)
 
 	if tokenErr != nil {
-		log.Println(tokenErr) // token failed to generate
 		c.Error(tokenErr)
 		errMsg := "Error Generating RTM token: " + tokenErr.Error()
 		c.AbortWithStatusJSON(400, gin.H{
@@ -77,6 +77,9 @@ func (s *Service) getRtcRtmToken(c *gin.Context) {
 	// get rtc param values
 	channelName, tokenType, uidStr, rtmuid, role, expireTimestamp, rtcParamErr := s.parseRtcParams(c)
 
+	if rtcParamErr == nil && rtmuid == "" {
+		rtcParamErr = fmt.Errorf("failed to parse rtm user ID. Cannot be empty or \"0\"")
+	}
 	if rtcParamErr != nil {
 		c.Error(rtcParamErr)
 		c.AbortWithStatusJSON(400, gin.H{
@@ -91,7 +94,6 @@ func (s *Service) getRtcRtmToken(c *gin.Context) {
 	rtmToken, rtmTokenErr := rtmtokenbuilder.BuildToken(s.appID, s.appCertificate, rtmuid, rtmtokenbuilder.RoleRtmUser, expireTimestamp)
 
 	if rtcTokenErr != nil {
-		log.Println(rtcTokenErr) // token failed to generate
 		c.Error(rtcTokenErr)
 		errMsg := "Error Generating RTC token - " + rtcTokenErr.Error()
 		c.AbortWithStatusJSON(400, gin.H{
@@ -99,7 +101,6 @@ func (s *Service) getRtcRtmToken(c *gin.Context) {
 			"error":  errMsg,
 		})
 	} else if rtmTokenErr != nil {
-		log.Println(rtmTokenErr) // token failed to generate
 		c.Error(rtmTokenErr)
 		errMsg := "Error Generating RTC token - " + rtmTokenErr.Error()
 		c.AbortWithStatusJSON(400, gin.H{
@@ -116,12 +117,12 @@ func (s *Service) getRtcRtmToken(c *gin.Context) {
 
 }
 
-func (s *Service) nocache() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		// set headers
-		c.Header("Cache-Control", "private, no-cache, no-store, must-revalidate")
-		c.Header("Expires", "-1")
-		c.Header("Pragma", "no-cache")
-		c.Header("Access-Control-Allow-Origin", "*")
-	}
-}
+// func (s *Service) nocache() gin.HandlerFunc {
+// 	return func(c *gin.Context) {
+// 		// set headers
+// 		c.Header("Cache-Control", "private, no-cache, no-store, must-revalidate")
+// 		c.Header("Expires", "-1")
+// 		c.Header("Pragma", "no-cache")
+// 		c.Header("Access-Control-Allow-Origin", "*")
+// 	}
+// }

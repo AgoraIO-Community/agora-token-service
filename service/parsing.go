@@ -22,10 +22,7 @@ func (s *Service) parseRtcParams(c *gin.Context) (channelName, tokenType, uidStr
 		// meaning it allows for any user ID
 		uidStr = "0"
 	}
-	if rtmuid == "" {
-		if uidStr == "0" {
-			err = fmt.Errorf("Failed to parse rtm user ID. Cannot be empty or \"0\"")
-		}
+	if rtmuid == "" && uidStr != "0" {
 		rtmuid = uidStr
 	}
 
@@ -43,7 +40,7 @@ func (s *Service) parseRtcParams(c *gin.Context) (channelName, tokenType, uidStr
 		if err != nil {
 			err = fmt.Errorf("%s. Also failed to parse expireTime: %s, causing error: %s", err, expireTime, parseErr)
 		} else {
-			err = fmt.Errorf("Failed to parse expireTime: %s, causing error: %s", expireTime, parseErr)
+			err = fmt.Errorf("failed to parse expireTime: %s, causing error: %s", expireTime, parseErr)
 		}
 	}
 
@@ -64,6 +61,10 @@ func (s *Service) parseRtmParams(c *gin.Context) (uidStr string, expireTimestamp
 	if parseErr != nil {
 		// if string conversion fails return an error
 		err = fmt.Errorf("failed to parse expireTime: %s, causing error: %s", expireTime, parseErr)
+	}
+
+	if uidStr == "" || uidStr == "0" {
+		err = fmt.Errorf("invalid RTM User ID: \"%s\"", uidStr)
 	}
 
 	// set timestamps
