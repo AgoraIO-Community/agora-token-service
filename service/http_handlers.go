@@ -58,7 +58,6 @@ func (s *Service) getRtmToken(c *gin.Context) {
 	rtmToken, tokenErr := rtmtokenbuilder.BuildToken(s.appID, s.appCertificate, uidStr, rtmtokenbuilder.RoleRtmUser, expireTimestamp)
 
 	if tokenErr != nil {
-		log.Println(tokenErr) // token failed to generate
 		c.Error(tokenErr)
 		errMsg := "Error Generating RTM token: " + tokenErr.Error()
 		c.AbortWithStatusJSON(400, gin.H{
@@ -118,12 +117,12 @@ func (s *Service) getRtcRtmToken(c *gin.Context) {
 
 }
 
-func (s *Service) nocache() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		// set headers
-		c.Header("Cache-Control", "private, no-cache, no-store, must-revalidate")
-		c.Header("Expires", "-1")
-		c.Header("Pragma", "no-cache")
-		c.Header("Access-Control-Allow-Origin", "*")
-	}
-}
+// func (s *Service) nocache() gin.HandlerFunc {
+// 	return func(c *gin.Context) {
+// 		// set headers
+// 		c.Header("Cache-Control", "private, no-cache, no-store, must-revalidate")
+// 		c.Header("Expires", "-1")
+// 		c.Header("Pragma", "no-cache")
+// 		c.Header("Access-Control-Allow-Origin", "*")
+// 	}
+// }
