@@ -113,3 +113,11 @@ response:
   "rtmToken":"rtm-token-djfkaljdla" 
 } 
 ```
+
+### Contributions
+
+Contributions are welcome, please test any changes to the Go code with the following command:
+
+```sh
+APP_ID=<YOUR_APP_ID> APP_CERTIFICATE=<YOUR_APP_CERT> go test -cover github.com/AgoraIO-Community/agora-token-service/service
+```

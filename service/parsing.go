@@ -5,11 +5,11 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/AgoraIO-Community/go-tokenbuilder/rtctokenbuilder"
+	rtctokenbuilder2 "github.com/AgoraIO-Community/go-tokenbuilder/rtctokenbuilder"
 	"github.com/gin-gonic/gin"
 )
 
-func (s *Service) parseRtcParams(c *gin.Context) (channelName, tokenType, uidStr string, rtmuid string, role rtctokenbuilder.Role, expireTimestamp uint32, err error) {
+func (s *Service) parseRtcParams(c *gin.Context) (channelName, tokenType, uidStr string, rtmuid string, role rtctokenbuilder2.Role, expireTimestamp uint32, err error) {
 	// get param values
 	channelName = c.Param("channelName")
 	roleStr := c.Param("role")
@@ -27,10 +27,10 @@ func (s *Service) parseRtcParams(c *gin.Context) (channelName, tokenType, uidStr
 	}
 
 	if roleStr == "publisher" {
-		role = rtctokenbuilder.RolePublisher
+		role = rtctokenbuilder2.RolePublisher
 	} else {
 		// Making an assumption that !publisher == subscriber
-		role = rtctokenbuilder.RoleSubscriber
+		role = rtctokenbuilder2.RoleSubscriber
 	}
 
 	expireTime := c.DefaultQuery("expiry", "3600")
