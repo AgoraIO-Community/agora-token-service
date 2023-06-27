@@ -29,7 +29,7 @@ func TestRtcValidAndInvalid(t *testing.T) {
 	// Call the endpoint
 	testService.Server.Handler.ServeHTTP(resp, reqValid)
 
-	assert.Equal(t, http.StatusOK, resp.Code)
+	assert.Equal(t, http.StatusOK, resp.Code, resp.Body)
 
 	resp = httptest.NewRecorder()
 

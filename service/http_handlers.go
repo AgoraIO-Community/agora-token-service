@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/AgoraIO-Community/go-tokenbuilder/rtmtokenbuilder"
+	rtmtokenbuilder2 "github.com/AgoraIO-Community/go-tokenbuilder/rtmtokenbuilder"
 
 	"github.com/gin-gonic/gin"
 )
@@ -55,7 +55,7 @@ func (s *Service) getRtmToken(c *gin.Context) {
 		return
 	}
 
-	rtmToken, tokenErr := rtmtokenbuilder.BuildToken(s.appID, s.appCertificate, uidStr, rtmtokenbuilder.RoleRtmUser, expireTimestamp)
+	rtmToken, tokenErr := rtmtokenbuilder2.BuildToken(s.appID, s.appCertificate, uidStr, expireTimestamp)
 
 	if tokenErr != nil {
 		c.Error(tokenErr)
@@ -91,7 +91,7 @@ func (s *Service) getRtcRtmToken(c *gin.Context) {
 	// generate the rtcToken
 	rtcToken, rtcTokenErr := s.generateRtcToken(channelName, uidStr, tokenType, role, expireTimestamp)
 	// generate rtmToken
-	rtmToken, rtmTokenErr := rtmtokenbuilder.BuildToken(s.appID, s.appCertificate, rtmuid, rtmtokenbuilder.RoleRtmUser, expireTimestamp)
+	rtmToken, rtmTokenErr := rtmtokenbuilder2.BuildToken(s.appID, s.appCertificate, rtmuid, expireTimestamp)
 
 	if rtcTokenErr != nil {
 		c.Error(rtcTokenErr)
