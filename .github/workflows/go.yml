@@ -2,26 +2,25 @@ name: Go
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, main ]
   pull_request:
-    branches: [ master ]
+    branches: [ master, main ]
 
 jobs:
-
   build:
+    env:
+      APP_CERTIFICATE: ${{ secrets.APP_CERTIFICATE_18 }}
+      APP_ID: ${{ secrets.APP_ID_18 }}
     name: Build
     runs-on: ubuntu-latest
     steps:
-
     - name: Set up Go 1.x
       uses: actions/setup-go@v2
       with:
-        go-version: ^1.17
+        go-version: ^1.20
       id: go
-
     - name: Check out code into the Go module directory
-      uses: actions/checkout@v2
-
+      uses: actions/checkout@v3
     - name: Get dependencies
       run: |
         go get -v -t -d ./...
@@ -29,9 +28,7 @@ jobs:
             curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
             dep ensure
         fi
-
     - name: Build
       run: go build -v cmd/main.go
-
     - name: Test
       run: go test -cover github.com/AgoraIO-Community/agora-token-service/service

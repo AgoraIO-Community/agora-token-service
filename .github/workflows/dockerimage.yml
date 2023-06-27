@@ -13,6 +13,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Build the Agora Token Service Docker image
       run: docker build . --file Dockerfile --tag agora-token-service:$(date +%s)
