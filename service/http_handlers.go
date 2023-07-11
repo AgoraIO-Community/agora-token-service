@@ -49,7 +49,7 @@ func (s *Service) getRtmToken(c *gin.Context) {
 	if err != nil {
 		c.Error(err)
 		c.AbortWithStatusJSON(400, gin.H{
-			"message": "Error Generating RTC token: " + err.Error(),
+			"message": "Error Generating RTM token: " + err.Error(),
 			"status":  400,
 		})
 		return
@@ -68,6 +68,36 @@ func (s *Service) getRtmToken(c *gin.Context) {
 		log.Println("RTM Token generated")
 		c.JSON(200, gin.H{
 			"rtmToken": rtmToken,
+		})
+	}
+}
+
+func (s *Service) getChatToken(c *gin.Context) {
+	log.Println("Generating Chat token")
+	// get param values
+	uidStr, tokenType, expireTimestamp, err := s.parseChatParams(c)
+
+	if err != nil {
+		c.AbortWithStatusJSON(400, gin.H{
+			"message": "Error Generating Chat token: " + err.Error(),
+			"status":  400,
+		})
+		return
+	}
+
+	chatToken, tokenErr := s.generateChatToken(uidStr, tokenType, expireTimestamp)
+
+	if tokenErr != nil {
+		c.Error(tokenErr)
+		errMsg := "Error Generating Chat token: " + tokenErr.Error()
+		c.AbortWithStatusJSON(400, gin.H{
+			"error":  errMsg,
+			"status": 400,
+		})
+	} else {
+		log.Println("Chat Token generated")
+		c.JSON(200, gin.H{
+			"chatToken": chatToken,
 		})
 	}
 }

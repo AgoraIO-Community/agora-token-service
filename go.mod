@@ -3,7 +3,7 @@ module github.com/AgoraIO-Community/agora-token-service
 go 1.19
 
 require (
-	github.com/AgoraIO-Community/go-tokenbuilder v1.1.0
+	github.com/AgoraIO-Community/go-tokenbuilder v1.2.0
 	github.com/gin-gonic/gin v1.9.1
 	github.com/joho/godotenv v1.3.0
 )
