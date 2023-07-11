@@ -75,3 +75,33 @@ func (s *Service) parseRtmParams(c *gin.Context) (uidStr string, expireTimestamp
 	// check if string conversion fails
 	return uidStr, expireTimestamp, err
 }
+
+func (s *Service) parseChatParams(c *gin.Context) (uidStr string, tokenType string, expireTimestamp uint32, err error) {
+	// get param values
+	uidStr = c.Param("chatid")
+	tokenType = c.Param("tokenType")
+	expireTime := c.DefaultQuery("expiry", "3600")
+	if tokenType == "account" {
+		tokenType = "userAccount"
+	}
+	if tokenType != "userAccount" && tokenType != "app" {
+		err = fmt.Errorf("token type must be \"userAccount\" or \"app\"")
+		return uidStr, tokenType, expireTimestamp, err
+	}
+	if uidStr == "" && tokenType != "app" {
+		err = fmt.Errorf("userAccount type requires chat ID")
+		return uidStr, tokenType, expireTimestamp, err
+	}
+	expireTime64, parseErr := strconv.ParseUint(expireTime, 10, 64)
+	if parseErr != nil {
+		// if string conversion fails return an error
+		err = fmt.Errorf("failed to parse expireTime: %s, causing error: %s", expireTime, parseErr)
+	}
+	// set timestamps
+	expireTimeInSeconds := uint32(expireTime64)
+	currentTimestamp := uint32(time.Now().UTC().Unix())
+	expireTimestamp = currentTimestamp + expireTimeInSeconds
+
+	// check if string conversion fails
+	return uidStr, tokenType, expireTimestamp, err
+}
