@@ -81,10 +81,11 @@ The `rtc` token endpoint requires a `tokenType` (uid || userAccount), `channelNa
 
 response:
 ``` json
-{"rtcToken":" "} 
+{"rtcToken":"007rtc-token-djfkaljdla"} 
 ```
 
-## RTM Token ##
+### RTM Token ###
+
 The `rtm` token endpoint requires the user's `rtmuid`. 
 `expiry(optional)` Pass an integer to represent the privelege lifetime in seconds.
 **endpoint structure** 
@@ -94,10 +95,10 @@ The `rtm` token endpoint requires the user's `rtmuid`.
 
 response:
 ``` json
-{"rtmToken":" "} 
+{"rtmToken":"007rtm-token-djfkaljdla"} 
 ```
 
-### Both Tokens ###
+### RTM + RTC Tokens ###
 The `rte` token endpoint generates both the `rtc` and `rtm` tokens with a single request. This endpoint requires a `tokenType` (uid || userAccount), `channelName`, the user's `rtcuid` (type varies `String/Int` based on `tokenType`) and `rtmuid` which is a `String`. Omitting `rtmuid` will assume it's the same as `rtcuid`.
 `expiry(optional)` Pass an integer to represent the token lifetime in seconds.
 
@@ -109,12 +110,35 @@ The `rte` token endpoint generates both the `rtc` and `rtm` tokens with a single
 response:
 ``` json
 {
-  "rtcToken":"rtc-token-djfkaljdla",
-  "rtmToken":"rtm-token-djfkaljdla" 
+  "rtcToken":"007rtc-token-djfkaljdla",
+  "rtmToken":"007rtm-token-djfkaljdla" 
 } 
 ```
 
-### Contributions
+### Chat Tokens ###
+
+#### endpoint structure ####
+
+app privileges:
+```
+chat/app/?expiry=3600
+```
+
+user privileges:
+```
+/chat/account/:chatid/?expiry=3600
+```
+
+`expiry` is an optional parameter for both.
+
+response:
+``` json
+{
+  "chatToken":"007chat-token-djfkaljdla"
+} 
+```
+
+## Contributions
 
 Contributions are welcome, please test any changes to the Go code with the following command:
 
