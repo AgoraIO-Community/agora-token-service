@@ -83,6 +83,8 @@ func NewService() *Service {
 	api.GET("rtm/:rtmuid/", s.getRtmToken)
 	api.GET("rte/:channelName/:role/:tokenType/:rtcuid/", s.getRtcRtmToken)
 	api.GET("rte/:channelName/:role/:tokenType/:rtcuid/:rtmuid/", s.getRtcRtmToken)
+	api.GET("chat/app/", s.getChatToken)             // Chat token for API calls
+	api.GET("chat/account/:chatid/", s.getChatToken) // Chat token for SDK calls
 
 	s.Server.Handler = api
 	return s
