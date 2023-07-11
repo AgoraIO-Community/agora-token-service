@@ -14,7 +14,7 @@
 *.so
 *.dylib
 main
-agora-token-server
+agora-token-service
 
 # Test binary, built with `go test -c`
 *.test

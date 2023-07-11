@@ -25,24 +25,18 @@ func TestRtcValidAndInvalid(t *testing.T) {
 	}
 	// Create a response recorder to inspect the response
 	resp := httptest.NewRecorder()
-
 	// Call the endpoint
 	testService.Server.Handler.ServeHTTP(resp, reqValid)
-
 	assert.Equal(t, http.StatusOK, resp.Code, resp.Body)
 
 	resp = httptest.NewRecorder()
-
 	// Call the endpoint
 	testService.Server.Handler.ServeHTTP(resp, reqInvalid)
-
 	assert.Equal(t, http.StatusBadRequest, resp.Code)
 
 	resp = httptest.NewRecorder()
-
 	// Call the endpoint
 	testService.Server.Handler.ServeHTTP(resp, reqInvalidExp)
-
 	assert.Equal(t, http.StatusBadRequest, resp.Code)
 }
 
@@ -71,6 +65,31 @@ func TestRtmValidAndInvalid(t *testing.T) {
 	testService.Server.Handler.ServeHTTP(resp, reqInvalid)
 
 	assert.Equal(t, http.StatusBadRequest, resp.Code)
+}
+
+type UrlCodePair struct {
+	url  string
+	code int
+}
+
+func TestChatValidAndInvalid(t *testing.T) {
+
+	tests := []UrlCodePair{
+		{"/chat/app/", http.StatusOK},
+		{"/chat/account/username/", http.StatusOK},
+		{"/chat/account/", http.StatusBadRequest},
+		{"/chat/invalid/", http.StatusBadRequest},
+	}
+	for _, httpTest := range tests {
+		testApi, err := http.NewRequest(http.MethodGet, httpTest.url, nil)
+		if err != nil {
+			t.Fatal(err)
+		}
+		resp := httptest.NewRecorder()
+		// Call the endpoint
+		testService.Server.Handler.ServeHTTP(resp, testApi)
+		assert.Equal(t, httpTest.code, resp.Code, resp.Body)
+	}
 }
 
 func TestRteValidAndInvalid(t *testing.T) {
