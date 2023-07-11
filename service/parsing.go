@@ -3,6 +3,7 @@ package service
 import (
 	"fmt"
 	"strconv"
+	"strings"
 	"time"
 
 	rtctokenbuilder2 "github.com/AgoraIO-Community/go-tokenbuilder/rtctokenbuilder"
@@ -37,11 +38,7 @@ func (s *Service) parseRtcParams(c *gin.Context) (channelName, tokenType, uidStr
 	expireTime64, parseErr := strconv.ParseUint(expireTime, 10, 64)
 	if parseErr != nil {
 		// if string conversion fails return an error
-		if err != nil {
-			err = fmt.Errorf("%s. Also failed to parse expireTime: %s, causing error: %s", err, expireTime, parseErr)
-		} else {
-			err = fmt.Errorf("failed to parse expireTime: %s, causing error: %s", expireTime, parseErr)
-		}
+		err = fmt.Errorf("failed to parse expireTime: %s, causing error: %s", expireTime, parseErr)
 	}
 
 	// set timestamps
@@ -79,14 +76,16 @@ func (s *Service) parseRtmParams(c *gin.Context) (uidStr string, expireTimestamp
 func (s *Service) parseChatParams(c *gin.Context) (uidStr string, tokenType string, expireTimestamp uint32, err error) {
 	// get param values
 	uidStr = c.Param("chatid")
-	tokenType = c.Param("tokenType")
+	urlSplit := strings.Split(c.Request.URL.Path, "/")
+	for i := range urlSplit {
+		if urlSplit[i] == "chat" {
+			tokenType = urlSplit[i+1]
+			break
+		}
+	}
 	expireTime := c.DefaultQuery("expiry", "3600")
 	if tokenType == "account" {
 		tokenType = "userAccount"
-	}
-	if tokenType != "userAccount" && tokenType != "app" {
-		err = fmt.Errorf("token type must be \"userAccount\" or \"app\"")
-		return uidStr, tokenType, expireTimestamp, err
 	}
 	if uidStr == "" && tokenType != "app" {
 		err = fmt.Errorf("userAccount type requires chat ID")

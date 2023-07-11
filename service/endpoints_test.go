@@ -10,34 +10,22 @@ import (
 
 func TestRtcValidAndInvalid(t *testing.T) {
 
-	// Create a new gin engine for testing
-	reqValid, err := http.NewRequest(http.MethodGet, "/rtc/fsda/publisher/uid/0/?expiry=600", nil)
-	if err != nil {
-		t.Fatal(err)
+	tests := []UrlCodePair{
+		{"/rtc/fsda/publisher/uid/0/?expiry=600", http.StatusOK},
+		{"/rtc/fsda/publisher/uid//?expiry=600", http.StatusOK},
+		{"/rtc/fsda/publisher/uid/test/?expiry=600", http.StatusBadRequest},
+		{"/rtc/fsda/publisher/uid/0/?expiry=failing", http.StatusBadRequest},
 	}
-	reqInvalid, err := http.NewRequest(http.MethodGet, "/rtc/fsda/publisher/uid/test/?expiry=600", nil)
-	if err != nil {
-		t.Fatal(err)
+	for _, httpTest := range tests {
+		testApi, err := http.NewRequest(http.MethodGet, httpTest.url, nil)
+		if err != nil {
+			t.Fatal(err)
+		}
+		resp := httptest.NewRecorder()
+		// Call the endpoint
+		testService.Server.Handler.ServeHTTP(resp, testApi)
+		assert.Equal(t, httpTest.code, resp.Code, resp.Body)
 	}
-	reqInvalidExp, err := http.NewRequest(http.MethodGet, "/rtc/fsda/publisher/uid/0/?expiry=failing", nil)
-	if err != nil {
-		t.Fatal(err)
-	}
-	// Create a response recorder to inspect the response
-	resp := httptest.NewRecorder()
-	// Call the endpoint
-	testService.Server.Handler.ServeHTTP(resp, reqValid)
-	assert.Equal(t, http.StatusOK, resp.Code, resp.Body)
-
-	resp = httptest.NewRecorder()
-	// Call the endpoint
-	testService.Server.Handler.ServeHTTP(resp, reqInvalid)
-	assert.Equal(t, http.StatusBadRequest, resp.Code)
-
-	resp = httptest.NewRecorder()
-	// Call the endpoint
-	testService.Server.Handler.ServeHTTP(resp, reqInvalidExp)
-	assert.Equal(t, http.StatusBadRequest, resp.Code)
 }
 
 func TestRtmValidAndInvalid(t *testing.T) {
@@ -77,8 +65,10 @@ func TestChatValidAndInvalid(t *testing.T) {
 	tests := []UrlCodePair{
 		{"/chat/app/", http.StatusOK},
 		{"/chat/account/username/", http.StatusOK},
-		{"/chat/account/", http.StatusBadRequest},
-		{"/chat/invalid/", http.StatusBadRequest},
+		{"/chat/account/", http.StatusNotFound},
+		{"/chat/invalid/", http.StatusNotFound},
+		{"/chat/account/username/?expiry=600", http.StatusOK},
+		{"/chat/account/username/?expiry=fail", http.StatusBadRequest},
 	}
 	for _, httpTest := range tests {
 		testApi, err := http.NewRequest(http.MethodGet, httpTest.url, nil)
@@ -94,52 +84,24 @@ func TestChatValidAndInvalid(t *testing.T) {
 
 func TestRteValidAndInvalid(t *testing.T) {
 
-	// Create a new gin engine for testing
-	reqValid, err := http.NewRequest(http.MethodGet, "/rte/channelName/publisher/uid/0/rtmid/?expiry=600", nil)
-	if err != nil {
-		t.Fatal(err)
+	tests := []UrlCodePair{
+		{"/rte/channelName/publisher/uid/0/rtmid/?expiry=600", http.StatusOK},
+		{"/rte/channelName/publisher/uid/2345/?expiry=600", http.StatusOK},
+		{"/rte/channelName/subscriber/uid/0/rtmid/?expiry=600", http.StatusOK},
+		{"/rte/channelName/subscriber/uid/2345/?expiry=600", http.StatusOK},
+		{"/rte/channelName/publisher/uid/0/?expiry=600", http.StatusBadRequest},
+		{"/rte/channelName/publisher/uid/2345/?expiry=failing", http.StatusBadRequest},
 	}
-	// Create a new gin engine for testing
-	reqValid2, err := http.NewRequest(http.MethodGet, "/rte/channelName/publisher/uid/2345/?expiry=600", nil)
-	if err != nil {
-		t.Fatal(err)
+	for _, httpTest := range tests {
+		testApi, err := http.NewRequest(http.MethodGet, httpTest.url, nil)
+		if err != nil {
+			t.Fatal(err)
+		}
+		resp := httptest.NewRecorder()
+		// Call the endpoint
+		testService.Server.Handler.ServeHTTP(resp, testApi)
+		assert.Equal(t, httpTest.code, resp.Code, resp.Body)
 	}
-	reqInvalid, err := http.NewRequest(http.MethodGet, "/rte/channelName/publisher/uid/0/?expiry=600", nil)
-	if err != nil {
-		t.Fatal(err)
-	}
-	reqInvalidExp, err := http.NewRequest(http.MethodGet, "/rte/channelName/publisher/uid/2345/?expiry=failing", nil)
-	if err != nil {
-		t.Fatal(err)
-	}
-	// Create a response recorder to inspect the response
-	resp := httptest.NewRecorder()
-
-	// Call the endpoint
-	testService.Server.Handler.ServeHTTP(resp, reqValid)
-
-	assert.Equal(t, http.StatusOK, resp.Code)
-
-	resp = httptest.NewRecorder()
-
-	// Call the endpoint
-	testService.Server.Handler.ServeHTTP(resp, reqValid2)
-
-	assert.Equal(t, http.StatusOK, resp.Code)
-
-	resp = httptest.NewRecorder()
-
-	// Call the endpoint
-	testService.Server.Handler.ServeHTTP(resp, reqInvalid)
-
-	assert.Equal(t, http.StatusBadRequest, resp.Code)
-
-	resp = httptest.NewRecorder()
-
-	// Call the endpoint
-	testService.Server.Handler.ServeHTTP(resp, reqInvalidExp)
-
-	assert.Equal(t, http.StatusBadRequest, resp.Code)
 }
 
 func TestTokentypes(t *testing.T) {
