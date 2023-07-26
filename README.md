@@ -124,10 +124,9 @@ The following are the supported token types along with their required parameters
 
 ### Response
 
-Upon successful generation of the token, the API will respond with an HTTP status code of `200 OK`, and the response body will contain the token in plain text.
+Upon successful generation of the token, the API will respond with an HTTP status code of `200 OK`, and the response body will contain the token in a JSON key `"token"`.
 
 If there is an error during token generation or if the request parameters are invalid, the API will respond with an appropriate HTTP status code and an error message in the response body.
-
 
 ### Sample Usage
 
@@ -147,8 +146,10 @@ curl -X POST -H "Content-Type: application/json" -d '{
 
 #### Reponse:
 
-```text
-007hbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhZG1pbiIsInN1YiI6InVzZXIxMjMiLCJpYXQiOjE2MzEwNTU4NzIsImV4cCI6MTYzMTA1OTQ3Mn0.3eJ-RGwIl2ANFbdv4SeHtWzGiv6PpC3i0UqXlHfsqEw
+```json
+{
+  "token": "007hbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhZG1pbiIsInN1YiI6InVzZXIxMjMiLCJpYXQiOjE2MzEwNTU4NzIsImV4cCI6MTYzMTA1OTQ3Mn0.3eJ-RGwIl2ANFbdv4SeHtWzGiv6PpC3i0UqXlHfsqEw"
+}
 ```
 
 ---

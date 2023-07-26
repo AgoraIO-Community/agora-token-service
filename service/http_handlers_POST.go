@@ -58,8 +58,9 @@ func (s *Service) getToken(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": tokenErr.Error()})
 		return
 	}
-	c.Writer.WriteHeader(http.StatusOK)
-	c.Writer.Write([]byte(token))
+	c.JSON(http.StatusOK, gin.H{
+		"token": token,
+	})
 }
 
 // TokenRequest is a struct representing the JSON payload structure for token generation requests.
