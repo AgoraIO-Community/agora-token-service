@@ -86,6 +86,7 @@ func NewService() *Service {
 	api.GET("chat/app/", s.getChatToken)             // Chat token for API calls
 	api.GET("chat/account/:chatid/", s.getChatToken) // Chat token for SDK calls
 
+	api.POST("/getToken", s.getToken)
 	s.Server.Handler = api
 	return s
 }
