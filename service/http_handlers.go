@@ -12,7 +12,7 @@ import (
 func (s *Service) getRtcToken(c *gin.Context) {
 	log.Println("Generating RTC token")
 	// get param values
-	channelName, tokenType, uidStr, _, role, expireTimestamp, err := s.parseRtcParams(c)
+	channelName, tokenType, uidStr, _, role, expire, err := s.parseRtcParams(c)
 
 	if err != nil {
 		c.Error(err)
@@ -23,7 +23,7 @@ func (s *Service) getRtcToken(c *gin.Context) {
 		return
 	}
 
-	rtcToken, tokenErr := s.generateRtcToken(channelName, uidStr, tokenType, role, expireTimestamp)
+	rtcToken, tokenErr := s.generateRtcToken(channelName, uidStr, tokenType, role, expire)
 
 	if tokenErr != nil {
 		log.Println(tokenErr) // token failed to generate
@@ -44,7 +44,7 @@ func (s *Service) getRtcToken(c *gin.Context) {
 func (s *Service) getRtmToken(c *gin.Context) {
 	log.Println("Generating RTM token")
 	// get param values
-	uidStr, expireTimestamp, err := s.parseRtmParams(c)
+	uidStr, expire, err := s.parseRtmParams(c)
 
 	if err != nil {
 		c.Error(err)
@@ -55,7 +55,7 @@ func (s *Service) getRtmToken(c *gin.Context) {
 		return
 	}
 
-	rtmToken, tokenErr := rtmtokenbuilder2.BuildToken(s.appID, s.appCertificate, uidStr, expireTimestamp)
+	rtmToken, tokenErr := rtmtokenbuilder2.BuildToken(s.appID, s.appCertificate, uidStr, expire, "")
 
 	if tokenErr != nil {
 		c.Error(tokenErr)
@@ -105,7 +105,7 @@ func (s *Service) getChatToken(c *gin.Context) {
 func (s *Service) getRtcRtmToken(c *gin.Context) {
 	log.Println("Generating RTC and RTM tokens")
 	// get rtc param values
-	channelName, tokenType, uidStr, rtmuid, role, expireTimestamp, rtcParamErr := s.parseRtcParams(c)
+	channelName, tokenType, uidStr, rtmuid, role, expire, rtcParamErr := s.parseRtcParams(c)
 
 	if rtcParamErr == nil && rtmuid == "" {
 		rtcParamErr = fmt.Errorf("failed to parse rtm user ID. Cannot be empty or \"0\"")
@@ -113,15 +113,15 @@ func (s *Service) getRtcRtmToken(c *gin.Context) {
 	if rtcParamErr != nil {
 		c.Error(rtcParamErr)
 		c.AbortWithStatusJSON(400, gin.H{
-			"message": "Error Generating RTC token: " + rtcParamErr.Error(),
+			"message": "Error Generating RTC and RTM token: " + rtcParamErr.Error(),
 			"status":  400,
 		})
 		return
 	}
 	// generate the rtcToken
-	rtcToken, rtcTokenErr := s.generateRtcToken(channelName, uidStr, tokenType, role, expireTimestamp)
+	rtcToken, rtcTokenErr := s.generateRtcToken(channelName, uidStr, tokenType, role, expire)
 	// generate rtmToken
-	rtmToken, rtmTokenErr := rtmtokenbuilder2.BuildToken(s.appID, s.appCertificate, rtmuid, expireTimestamp)
+	rtmToken, rtmTokenErr := rtmtokenbuilder2.BuildToken(s.appID, s.appCertificate, rtmuid, expire, channelName)
 
 	if rtcTokenErr != nil {
 		c.Error(rtcTokenErr)
@@ -132,13 +132,13 @@ func (s *Service) getRtcRtmToken(c *gin.Context) {
 		})
 	} else if rtmTokenErr != nil {
 		c.Error(rtmTokenErr)
-		errMsg := "Error Generating RTC token - " + rtmTokenErr.Error()
+		errMsg := "Error Generating RTM token - " + rtmTokenErr.Error()
 		c.AbortWithStatusJSON(400, gin.H{
 			"status": 400,
 			"error":  errMsg,
 		})
 	} else {
-		log.Println("RTC Token generated")
+		log.Println("RTC and RTM Tokens generated")
 		c.JSON(200, gin.H{
 			"rtcToken": rtcToken,
 			"rtmToken": rtmToken,

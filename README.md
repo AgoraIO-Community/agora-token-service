@@ -68,6 +68,95 @@ response:
 {"message":"pong"} 
 ```
 
+### getToken ###
+
+The `getToken` API endpoint allows you to generate tokens for different functionalities of the application. This section provides guidelines on how to use the `getToken` endpoint using HTTP POST requests.
+
+### Endpoint URL
+
+```
+POST /getToken
+```
+
+### Request Body
+
+The request body should contain a JSON payload with the required parameters for generating the tokens.
+
+The following are the supported token types along with their required parameters:
+
+1. **RTC Token:**
+
+   To generate an RTC token for video conferencing, include the following parameters in the request body:
+
+   ```json
+   {
+       "tokenType": "rtc",
+       "channel": "your-channel-name",
+       "role": "publisher",  // "publisher" or "subscriber"
+       "uid": "your-uid",
+       "expire": 3600 // optional: expiration time in seconds (default: 3600)
+   }
+   ```
+
+2. **RTM Token:**
+
+   To generate an RTM token for Real-Time Messaging, include the following parameters in the request body:
+
+   ```json
+   {
+       "tokenType": "rtm",
+       "uid": "your-uid",
+       "expire": 3600 // optional: expiration time in seconds (default: 3600)
+   }
+   ```
+
+3. **Chat Token:**
+
+   To generate a chat token, include the following parameters in the request body:
+
+   ```json
+   {
+       "tokenType": "chat",
+       "uid": "your-uid", // optional: for generating a user-specific chat token
+       "expire": 3600 // optional: expiration time in seconds (default: 3600)
+   }
+   ```
+
+### Response
+
+Upon successful generation of the token, the API will respond with an HTTP status code of `200 OK`, and the response body will contain the token in plain text.
+
+If there is an error during token generation or if the request parameters are invalid, the API will respond with an appropriate HTTP status code and an error message in the response body.
+
+
+### Sample Usage
+
+Here's an example of how to use the `getToken` API endpoint with a POST request using cURL:
+
+#### Request:
+
+```bash
+curl -X POST -H "Content-Type: application/json" -d '{
+    "tokenType": "rtc",
+    "channel": "my-video-channel",
+    "role": "publisher",
+    "uid": "user123",
+    "expire": 3600
+}' "https://your-api-domain.com/getToken"
+```
+
+#### Reponse:
+
+```text
+007hbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhZG1pbiIsInN1YiI6InVzZXIxMjMiLCJpYXQiOjE2MzEwNTU4NzIsImV4cCI6MTYzMTA1OTQ3Mn0.3eJ-RGwIl2ANFbdv4SeHtWzGiv6PpC3i0UqXlHfsqEw
+```
+
+---
+
+## Deprecated Methods
+The following methods are deprecated but still operational. While they continue to work for backward compatibility, it is advised to refrain from using them in new implementations due to potential future removal or replacement with more efficient alternatives.
+
+
 ### RTC Token ###
 The `rtc` token endpoint requires a `tokenType` (uid || userAccount), `channelName`, and the user's `uid` (type varies based on `tokenType`). 
 `expiry(optional)` Pass an integer to represent the token lifetime in seconds.
