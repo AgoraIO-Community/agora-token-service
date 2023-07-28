@@ -88,7 +88,7 @@ The following are the supported token types along with their required parameters
 
    To generate an RTC token for video conferencing, include the following parameters in the request body:
 
-   ```json
+   ```js
    {
        "tokenType": "rtc",
        "channel": "your-channel-name",
@@ -102,10 +102,11 @@ The following are the supported token types along with their required parameters
 
    To generate an RTM token for Real-Time Messaging, include the following parameters in the request body:
 
-   ```json
+   ```js
    {
        "tokenType": "rtm",
        "uid": "your-uid",
+       "channel": "test", // optional: passing channel gives streamchannel. wildcard "*" is an option.
        "expire": 3600 // optional: expiration time in seconds (default: 3600)
    }
    ```
@@ -114,7 +115,7 @@ The following are the supported token types along with their required parameters
 
    To generate a chat token, include the following parameters in the request body:
 
-   ```json
+   ```js
    {
        "tokenType": "chat",
        "uid": "your-uid", // optional: for generating a user-specific chat token

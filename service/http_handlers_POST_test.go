@@ -100,6 +100,23 @@ func TestGenRtmToken(t *testing.T) {
 		t.Error("Expected a non-empty RTM token")
 	}
 
+	// Test valid RTM token generation with channel, but without expiration
+	tokenChannelReq := TokenRequest{
+		TokenType: "rtm",
+		Uid:       "user123",
+		Channel:   "test_channel",
+	}
+
+	token, err = service.genRtmToken(tokenChannelReq)
+	if err != nil {
+		t.Errorf("Unexpected error: %v", err)
+	}
+	// Add assertions for the expected token value
+	// For example: assert token is not empty, or has a specific format, etc.
+	if token == "" {
+		t.Error("Expected a non-empty RTM token")
+	}
+
 	// Test invalid RTM token generation (missing user ID)
 	invalidTokenReq := TokenRequest{
 		TokenType:         "rtm",
