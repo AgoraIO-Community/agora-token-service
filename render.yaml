@@ -10,3 +10,6 @@ services:
         sync: false
       - key: APP_CERTIFICATE
         sync: false
+      - key: CORS_ALLOW_ORIGIN
+        sync: false
+        value: "*"

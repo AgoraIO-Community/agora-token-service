@@ -13,12 +13,22 @@ import (
 	"github.com/joho/godotenv"
 )
 
-// Service is Ravelin backend service
+// Service represents the main application service.
 type Service struct {
-	Server         *http.Server
-	Sigint         chan os.Signal
-	appID          string
+	// Server is the HTTP server for the application.
+	Server *http.Server
+
+	// Sigint is a channel to handle OS signals, such as Ctrl+C.
+	Sigint chan os.Signal
+
+	// appID is the identifier for the application.
+	appID string
+
+	// appCertificate is the certificate used by the application.
 	appCertificate string
+
+	// allowOrigin specifies the allowed origin for Cross-Origin Resource Sharing (CORS).
+	allowOrigin string
 }
 
 // Stop service safely, closing additional connections if needed.
@@ -67,6 +77,7 @@ func NewService() *Service {
 			serverPort = "8080"
 		}
 	}
+	corsAllowOrigin, _ := os.LookupEnv("CORS_ALLOW_ORIGIN")
 
 	s := &Service{
 		Sigint: make(chan os.Signal, 1),
@@ -75,10 +86,12 @@ func NewService() *Service {
 		},
 		appID:          appIDEnv,
 		appCertificate: appCertEnv,
+		allowOrigin:    corsAllowOrigin,
 	}
 
 	api := gin.Default()
 
+	api.Use(s.nocache())
 	api.GET("rtc/:channelName/:role/:tokenType/:rtcuid/", s.getRtcToken)
 	api.GET("rtm/:rtmuid/", s.getRtmToken)
 	api.GET("rte/:channelName/:role/:tokenType/:rtcuid/", s.getRtcRtmToken)
