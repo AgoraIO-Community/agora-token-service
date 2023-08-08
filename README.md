@@ -18,7 +18,7 @@ Agora Advanced Guide: [Token Management](https://docs.agora.io/en/video-calling/
 
 ## How to Run ##
 
-Set the APP_ID and APP_CERTIFICATE env variables.
+Set the APP_ID, APP_CERTIFICATE and CORS_ALLOW_ORIGIN env variables.
 
 ```bash
 cp .env.example .env
@@ -31,7 +31,7 @@ go run cmd/main.go
 Without using `.env`, you can also set the environment variables as such:
 
 ```bash
-APP_ID=app_id APP_CERTIFICATE=app_cert go run cmd/main.go
+APP_ID=app_id APP_CERTIFICATE=app_cert CORS_ALLOW_ORIGIN=allowed_origins go run cmd/main.go
 ```
 
 ---
@@ -43,7 +43,7 @@ The pre-compiled binaries are also available in [releases](https://github.com/Ag
 #1. To build the container, with app id and certificate: 
 
 ```bash
-docker build -t agora-token-service --build-arg APP_ID=$APP_ID APP_CERTIFICATE=$APP_CERTIFICATE .
+docker build -t agora-token-service --build-arg APP_ID=$APP_ID APP_CERTIFICATE=$APP_CERTIFICATE CORS_ALLOW_ORIGIN=$ALLOWED_ORIGINS .
 ```
 
 #2. Run the container 

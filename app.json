@@ -25,6 +25,11 @@
     "APP_CERTIFICATE": {
       "description": "Agora.io App Certificate: Login to the Agora.io Developer Dashboard (http://dashboard.agora.io), and navigate to the \"Projects\" tab to get this value",
       "required": true
+    },
+    "CORS_ALLOW_ORIGIN": {
+      "description": "The allowed origin for Cross-Origin Resource Sharing (CORS). This determines which origins are permitted to access the resources of your application.",
+      "required": true,
+      "value": "*"
     }
   }
 }

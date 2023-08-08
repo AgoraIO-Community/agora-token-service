@@ -2,6 +2,7 @@ setup:
   config:
     APP_ID: my-agora-app-id
     APP_CERTIFICATE: my-agora-app-certificate
+    CORS_ALLOW_ORIGIN: *
 build:
   docker:
     web: Dockerfile
