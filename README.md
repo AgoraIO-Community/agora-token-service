@@ -14,7 +14,7 @@ Agora Advanced Guide: [Token Management](https://docs.agora.io/en/video-calling/
 
 | Railway | Render | Heroku |
 |:-:|:-:|:-:|
-| [![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/NKYzQA?referralCode=waRWUT) | [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/AgoraIO-Community/agora-token-service) | [![Deploy to Heroku](https://www.herokucdn.com/deploy/button.svg)](https://www.heroku.com/deploy/?template=https://github.com/AgoraIO-Community/agora-token-service) |
+| [![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/template/NKYzQA?referralCode=waRWUT) | [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/AgoraIO-Community/agora-token-service) | [![Deploy to Heroku](https://www.herokucdn.com/deploy/button.svg)](https://www.heroku.com/deploy/?template=https://github.com/AgoraIO-Community/agora-token-service) |
 
 ## How to Run ##
 
