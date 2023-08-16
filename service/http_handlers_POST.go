@@ -1,6 +1,7 @@
 package service
 
 import (
+	"encoding/json"
 	"errors"
 	"net/http"
 	"strconv"
@@ -11,15 +12,50 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// getToken handles the HTTP request to generate a token based on the provided tokenType.
-// It checks the tokenType from the query parameters and calls the appropriate token generation method.
-// The generated token is sent as a JSON response to the client.
+// TokenRequest is a struct representing the JSON payload structure for token generation requests.
+// It contains fields necessary for generating different types of tokens (RTC, RTM, or chat) based on the "TokenType".
+// The "Channel", "RtcRole", "Uid", and "ExpirationSeconds" fields are used for specific token types.
+//
+// TokenType options: "rtc" for RTC token, "rtm" for RTM token, and "chat" for chat token.
+type TokenRequest struct {
+	TokenType         string `json:"tokenType"`         // The token type: "rtc", "rtm", or "chat"
+	Channel           string `json:"channel,omitempty"` // The channel name (used for RTC and RTM tokens)
+	RtcRole           string `json:"role,omitempty"`    // The role of the user for RTC tokens (publisher or subscriber)
+	Uid               string `json:"uid,omitempty"`     // The user ID or account (used for RTC, RTM, and some chat tokens)
+	ExpirationSeconds int    `json:"expire,omitempty"`  // The token expiration time in seconds (used for all token types)
+}
+
+// getToken is a helper function that acts as a proxy to the GetToken method.
+// It forwards the HTTP response writer and request from the provided *gin.Context
+// to the GetToken method for token generation and response sending.
 //
 // Parameters:
 //   - c: *gin.Context - The Gin context representing the HTTP request and response.
 //
 // Behavior:
-//  1. Retrieves the tokenType from the query parameters, defaulting to "rtc" if not provided.
+//   - Forwards the HTTP response writer and request to the GetToken method.
+//
+// Notes:
+//   - This function acts as an intermediary to invoke the GetToken method.
+//   - It allows token generation and response sending through a common proxy function.
+//
+// Example usage:
+//
+//	router.GET("/getToken", service.getToken)
+func (s *Service) getToken(c *gin.Context) {
+	s.GetToken(c.Writer, c.Request)
+}
+
+// getToken handles the HTTP request to generate a token based on the provided tokenType.
+// It checks the tokenType from the query parameters and calls the appropriate token generation method.
+// The generated token is sent as a JSON response to the client.
+//
+// Parameters:
+//   - w: http.ResponseWriter - The HTTP response writer to send the response to the client.
+//   - r: *http.Request - The HTTP request received from the client.
+//
+// Behavior:
+//  1. Retrieves the tokenType from the query parameters. Error if invalid entry or not provided.
 //  2. Uses a switch statement to handle different tokenType cases:
 //     - "rtm": Calls the RtmToken method to generate the RTM token and sends it as a JSON response.
 //     - "chat": Calls the ChatToken method to generate the chat token and sends it as a JSON response.
@@ -31,12 +67,13 @@ import (
 //
 // Example usage:
 //
-//	router.GET("/getToken", service.getToken)
-func (s *Service) getToken(c *gin.Context) {
-	// Parse the request body into a TokenRequest struct
+//	router.GET("/getToken", service.GetToken)
+func (s *Service) GetToken(w http.ResponseWriter, r *http.Request) {
 	var tokenReq TokenRequest
-	if err := c.ShouldBindJSON(&tokenReq); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	// Parse the request body into a TokenRequest struct
+	err := json.NewDecoder(r.Body).Decode(&tokenReq)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
@@ -51,29 +88,21 @@ func (s *Service) getToken(c *gin.Context) {
 	case "chat":
 		token, tokenErr = s.GenChatToken(tokenReq)
 	default:
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Unsupported tokenType"})
+		http.Error(w, "Unsupported tokenType", http.StatusBadRequest)
 		return
 	}
 	if tokenErr != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": tokenErr.Error()})
+		http.Error(w, tokenErr.Error(), http.StatusBadRequest)
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{
-		"token": token,
-	})
-}
 
-// TokenRequest is a struct representing the JSON payload structure for token generation requests.
-// It contains fields necessary for generating different types of tokens (RTC, RTM, or chat) based on the "TokenType".
-// The "Channel", "RtcRole", "Uid", and "ExpirationSeconds" fields are used for specific token types.
-//
-// TokenType options: "rtc" for RTC token, "rtm" for RTM token, and "chat" for chat token.
-type TokenRequest struct {
-	TokenType         string `json:"tokenType"`         // The token type: "rtc", "rtm", or "chat"
-	Channel           string `json:"channel,omitempty"` // The channel name (used for RTC and RTM tokens)
-	RtcRole           string `json:"role,omitempty"`    // The role of the user for RTC tokens (publisher or subscriber)
-	Uid               string `json:"uid,omitempty"`     // The user ID or account (used for RTC, RTM, and some chat tokens)
-	ExpirationSeconds int    `json:"expire,omitempty"`  // The token expiration time in seconds (used for all token types)
+	response := struct {
+		Token string `json:"token"`
+	}{Token: token}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(response)
 }
 
 // GenRtcToken generates an RTC token based on the provided TokenRequest and returns it.

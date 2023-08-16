@@ -21,6 +21,7 @@ func TestGetTokenValidAndInvalid(t *testing.T) {
 		{"/getToken", http.StatusBadRequest, []byte(`{"tokenType": "invalid_type", "channel": "channel789", "role": "publisher", "uid": "user123", "expire": 3600}`)},
 		{"/getToken", http.StatusBadRequest, []byte(`{"tokenType": "rtc", "role": "publisher", "uid": "user123", "expire": 3600}`)},
 		{"/getToken", http.StatusBadRequest, []byte(`{"tokenType": "rtm", "expire": 1800}`)},
+		{"/getToken", http.StatusBadRequest, []byte(``)},
 		{"/getToken", http.StatusOK, []byte(`{"tokenType": "chat"}`)},
 		{"/getToken", http.StatusOK, []byte(`{"tokenType": "chat", "uid": "user123"}`)},
 	}
