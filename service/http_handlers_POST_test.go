@@ -18,7 +18,7 @@ func CreateTestService(t *testing.T) *Service {
 	}
 }
 
-// TestGenRtcToken tests the genRtcToken function.
+// TestGenRtcToken tests the GenRtcToken function.
 func TestGenRtcToken(t *testing.T) {
 	service := CreateTestService(t)
 
@@ -31,7 +31,7 @@ func TestGenRtcToken(t *testing.T) {
 		ExpirationSeconds: 3600,
 	}
 
-	token, err := service.genRtcToken(tokenReq)
+	token, err := service.GenRtcToken(tokenReq)
 	if err != nil {
 		t.Errorf("Unexpected error: %v", err)
 	}
@@ -49,7 +49,7 @@ func TestGenRtcToken(t *testing.T) {
 		RtcRole:   "subscriber",
 	}
 
-	_, err = service.genRtcToken(validWithoutExpiration)
+	_, err = service.GenRtcToken(validWithoutExpiration)
 	if err != nil {
 		t.Errorf("Unexpected error: %v", err)
 	}
@@ -61,7 +61,7 @@ func TestGenRtcToken(t *testing.T) {
 		ExpirationSeconds: 3600,
 	}
 
-	_, err = service.genRtcToken(invalidTokenReq)
+	_, err = service.GenRtcToken(invalidTokenReq)
 	if err == nil {
 		t.Error("Expected error, but got nil")
 	}
@@ -73,7 +73,7 @@ func TestGenRtcToken(t *testing.T) {
 		RtcRole:   "subscriber",
 	}
 
-	_, err = service.genRtcToken(invalidTokenReq2)
+	_, err = service.GenRtcToken(invalidTokenReq2)
 	if err == nil {
 		t.Error("Expected error, but got nil")
 	}
@@ -90,7 +90,7 @@ func TestGenRtmToken(t *testing.T) {
 		ExpirationSeconds: 3600,
 	}
 
-	token, err := service.genRtmToken(tokenReq)
+	token, err := service.GenRtmToken(tokenReq)
 	if err != nil {
 		t.Errorf("Unexpected error: %v", err)
 	}
@@ -107,7 +107,7 @@ func TestGenRtmToken(t *testing.T) {
 		Channel:   "test_channel",
 	}
 
-	token, err = service.genRtmToken(tokenChannelReq)
+	token, err = service.GenRtmToken(tokenChannelReq)
 	if err != nil {
 		t.Errorf("Unexpected error: %v", err)
 	}
@@ -123,7 +123,7 @@ func TestGenRtmToken(t *testing.T) {
 		ExpirationSeconds: 3600,
 	}
 
-	_, err = service.genRtmToken(invalidTokenReq)
+	_, err = service.GenRtmToken(invalidTokenReq)
 	if err == nil {
 		t.Error("Expected error, but got nil")
 	}
@@ -141,7 +141,7 @@ func TestGenChatToken(t *testing.T) {
 		ExpirationSeconds: 3600,
 	}
 
-	tokenApp, err := service.genChatToken(tokenReqApp)
+	tokenApp, err := service.GenChatToken(tokenReqApp)
 	if err != nil {
 		t.Errorf("Unexpected error: %v", err)
 	}
@@ -158,7 +158,7 @@ func TestGenChatToken(t *testing.T) {
 		ExpirationSeconds: 3600,
 	}
 
-	tokenUser, err := service.genChatToken(tokenReqUser)
+	tokenUser, err := service.GenChatToken(tokenReqUser)
 	if err != nil {
 		t.Errorf("Unexpected error: %v", err)
 	}
@@ -174,7 +174,7 @@ func TestGenChatToken(t *testing.T) {
 		Uid:       "user123",
 	}
 
-	_, err = service.genChatToken(invalidTokenReq)
+	_, err = service.GenChatToken(invalidTokenReq)
 	if err != nil {
 		t.Errorf("Unexpected error: %v", err)
 	}
