@@ -58,16 +58,6 @@ docker run -p 8080:8080 agora-token-service
 
 ## Endpoints ##
 
-### Ping ###
-**endpoint structure**
-```bash
-/ping
-```
-response:
-``` json
-{"message":"pong"} 
-```
-
 ### getToken ###
 
 The `getToken` API endpoint allows you to generate tokens for different functionalities of the application. This section provides guidelines on how to use the `getToken` endpoint using HTTP POST requests.
