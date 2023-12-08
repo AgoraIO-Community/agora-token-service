@@ -11,20 +11,21 @@ on:
 jobs:
   build:
     env:
-      APP_CERTIFICATE: ${{ secrets.APP_CERTIFICATE_18 }}
-      APP_ID: ${{ secrets.APP_ID_18 }}
+      APP_CERTIFICATE: 123456789abcdefgh123456789abcdef
+      APP_ID: 123456789abcdefgh123456789abcdef
     name: Build
     runs-on: ubuntu-latest
     steps:
     - name: Set up Go 1.x
-      uses: actions/setup-go@v2
+      uses: actions/setup-go@v5
       with:
         go-version: ^1.20
       id: go
     - name: Check out code into the Go module directory
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Get dependencies
       run: |
+        echo $APP_ID
         go get -v -t -d ./...
         if [ -f Gopkg.toml ]; then
             curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
@@ -33,4 +34,4 @@ jobs:
     - name: Build
       run: go build -v cmd/main.go
     - name: Test
-      run: go test -cover github.com/AgoraIO-Community/agora-token-service/service
+      run: APP_ID=$APP_ID APP_CERTIFICATE=$APP_CERTIFICATE go test -cover github.com/AgoraIO-Community/agora-token-service/service
