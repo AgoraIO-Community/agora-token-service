@@ -43,7 +43,7 @@ The pre-compiled binaries are also available in [releases](https://github.com/Ag
 #1. To build the container, with app id and certificate: 
 
 ```bash
-docker build -t agora-token-service --build-arg APP_ID=$APP_ID APP_CERTIFICATE=$APP_CERTIFICATE CORS_ALLOW_ORIGIN=$ALLOWED_ORIGINS .
+docker build -t agora-token-service --build-arg APP_ID=$APP_ID --build-arg APP_CERTIFICATE=$APP_CERTIFICATE --build-arg CORS_ALLOW_ORIGIN=$ALLOWED_ORIGINS .
 ```
 
 #2. Run the container 
