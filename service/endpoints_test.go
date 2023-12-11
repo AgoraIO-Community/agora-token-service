@@ -2,6 +2,7 @@ package service
 
 import (
 	"bytes"
+	"encoding/json"
 	"log"
 	"net/http"
 	"net/http/httptest"
@@ -135,6 +136,28 @@ func TestRteValidAndInvalid(t *testing.T) {
 		testService.Server.Handler.ServeHTTP(resp, testApi)
 		assert.Equal(t, httpTest.code, resp.Code, resp.Body)
 	}
+}
+
+func TestPingPong(t *testing.T) {
+	testApi, err := http.NewRequest(http.MethodGet, "/ping", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	resp := httptest.NewRecorder()
+	// Call the endpoint
+	testService.Server.Handler.ServeHTTP(resp, testApi)
+
+	// Check the response body
+	var response map[string]string
+	err = json.NewDecoder(resp.Body).Decode(&response)
+	if err != nil {
+		t.Fatalf("Expected no error, got %v", err)
+	}
+	if resp.Code != http.StatusOK {
+		t.Fatalf("Expected status code %d, got %d", http.StatusOK, resp.Code)
+	}
+
+	assert.Equal(t, "pong", response["message"])
 }
 
 func TestTokentypes(t *testing.T) {
