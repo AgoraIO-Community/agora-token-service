@@ -98,7 +98,11 @@ func NewService() *Service {
 	api.GET("rte/:channelName/:role/:tokenType/:rtcuid/:rtmuid/", s.getRtcRtmToken)
 	api.GET("chat/app/", s.getChatToken)             // Chat token for API calls
 	api.GET("chat/account/:chatid/", s.getChatToken) // Chat token for SDK calls
-
+	api.GET("/ping", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "pong",
+		})
+	})
 	api.POST("/getToken", s.getToken)
 	s.Server.Handler = api
 	return s
