@@ -1,0 +1,15 @@
+services:
+  agora-token-service:
+    build: .
+    container_name: agora-token-service
+    entrypoint: ./agora-token-service
+    expose:
+      - "2391"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:2391/ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "2391:2391"
+    restart: always
