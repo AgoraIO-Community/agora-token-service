@@ -7,7 +7,7 @@ services:
       - "2391"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:2391/ping"]
-      interval: 10s
+      interval: 900s
       timeout: 5s
       retries: 5
     ports:
