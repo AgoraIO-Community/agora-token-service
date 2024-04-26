@@ -65,6 +65,8 @@ func NewService() *Service {
 	appIDEnv, appIDExists := os.LookupEnv("APP_ID")
 	appCertEnv, appCertExists := os.LookupEnv("APP_CERTIFICATE")
 	serverPort, serverPortExists := os.LookupEnv("SERVER_PORT")
+	corsAllowOrigin, _ := os.LookupEnv("CORS_ALLOW_ORIGIN")
+
 	if !appIDExists || !appCertExists || len(appIDEnv) == 0 || len(appCertEnv) == 0 {
 		log.Fatal("FATAL ERROR: ENV not properly configured, check .env file or APP_ID and APP_CERTIFICATE")
 	}
@@ -77,7 +79,6 @@ func NewService() *Service {
 			serverPort = "8080"
 		}
 	}
-	corsAllowOrigin, _ := os.LookupEnv("CORS_ALLOW_ORIGIN")
 
 	s := &Service{
 		Sigint: make(chan os.Signal, 1),
