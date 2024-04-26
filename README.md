@@ -40,7 +40,7 @@ The pre-compiled binaries are also available in [releases](https://github.com/Ag
 
 ## Docker ##
 
-#1. To build the container, with app id and certificate: 
+#1. To build the container with app id and certificate: 
 
 ```bash
 docker build -t agora-token-service --build-arg APP_ID=$APP_ID --build-arg APP_CERTIFICATE=$APP_CERTIFICATE --build-arg CORS_ALLOW_ORIGIN=$ALLOWED_ORIGINS .
@@ -54,6 +54,22 @@ docker run agora-token-service
 > Note: for testing locally
 ```bash
 docker run -p 8080:8080 agora-token-service
+```
+
+## Makefile ##
+Build and run the docker container using `make`. The `Makefile` simplifies the build and run process by reducing them to a single command. The `Makefile` uses the `.env` file to add the `--buildArgs` and excutes the run command after build is completed. To avoid unnecessary rebuilds of the token server, the `Makefile` sets a `build_marker` target to watch the dockerfile, `.go` source code, and `.env` file. This enables a single command to build and run the container that only rebuilds as needed.
+
+#1. Set the APP_ID, and APP_CERTIFICATE as env variables. Optionaly SERVER_PORT and CORS_ALLOW_ORIGIN can also be set as env variables, but they not required and there are defaults if they are not detected.
+```bash
+cp .env.example .env
+```
+#2. Run `make`
+```bash
+make
+```
+Execute the `cleanup` target to force a rebuild:
+```bash
+make cleanup
 ```
 
 ## Endpoints ##
