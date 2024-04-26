@@ -57,7 +57,7 @@ docker run -p 8080:8080 agora-token-service
 ```
 
 ## Makefile ##
-Build and run the docker container using `make`. The `Makefile` simplifies the build and run process by reducing them to a single command. The `Makefile` uses the `.env` file to add the `--buildArgs` and excutes the run command after build is completed. To avoid unnecessary rebuilds of the token server, the `Makefile` sets a `build_marker` target to watch the dockerfile, `.go` source code, and `.env` file. This enables a single command to build and run the container that only rebuilds as needed.
+Build and run the docker container using `make`. The `Makefile` simplifies the build and run process by reducing them to a single command. The `Makefile` uses the `.env` file to add the list of `--build-arg`'s to the `docker build` command and executes the `docker run` command after the build is completed. To avoid unnecessary rebuilds of the token server, the `Makefile` sets a `build_marker` target to watch the dockerfile, `.go` source code, and `.env` file. This enables a single command to build and run the container that only rebuilds as needed.
 
 #1. Set the APP_ID, and APP_CERTIFICATE as env variables. Optionaly SERVER_PORT and CORS_ALLOW_ORIGIN can also be set as env variables, but they not required and there are defaults if they are not detected.
 ```bash
