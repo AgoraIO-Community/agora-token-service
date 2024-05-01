@@ -11,6 +11,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	"github.com/gin-contrib/cors"
 )
 
 // Service represents the main application service.
@@ -78,6 +79,7 @@ func NewService() *Service {
 		}
 	}
 	corsAllowOrigin, _ := os.LookupEnv("CORS_ALLOW_ORIGIN")
+	authorizationServiceURL := "https://www.wahooligan.com/api/v1/authentication_tokens"
 
 	s := &Service{
 		Sigint: make(chan os.Signal, 1),
@@ -92,18 +94,23 @@ func NewService() *Service {
 	api := gin.Default()
 
 	api.Use(s.nocache())
-	api.GET("rtc/:channelName/:role/:tokenType/:rtcuid/", s.getRtcToken)
-	api.GET("rtm/:rtmuid/", s.getRtmToken)
-	api.GET("rte/:channelName/:role/:tokenType/:rtcuid/", s.getRtcRtmToken)
-	api.GET("rte/:channelName/:role/:tokenType/:rtcuid/:rtmuid/", s.getRtcRtmToken)
-	api.GET("chat/app/", s.getChatToken)             // Chat token for API calls
-	api.GET("chat/account/:chatid/", s.getChatToken) // Chat token for SDK calls
+	api.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{corsAllowOrigin},
+		AllowMethods:     []string{"GET", "POST", "OPTIONS", "PUT"},
+		//AllowHeaders:     []string{"Authorization"},
+	}))
+	api.GET("rtc/:channelName/:role/:tokenType/:rtcuid/", authMiddleware(authorizationServiceURL), s.getRtcToken)
+	api.GET("rtm/:rtmuid/", authMiddleware(authorizationServiceURL), s.getRtmToken)
+	api.GET("rte/:channelName/:role/:tokenType/:rtcuid/", authMiddleware(authorizationServiceURL), s.getRtcRtmToken)
+	api.GET("rte/:channelName/:role/:tokenType/:rtcuid/:rtmuid/", authMiddleware(authorizationServiceURL), s.getRtcRtmToken)
+	api.GET("chat/app/", authMiddleware(authorizationServiceURL), s.getChatToken)             // Chat token for API calls
+	api.GET("chat/account/:chatid/", authMiddleware(authorizationServiceURL), s.getChatToken) // Chat token for SDK calls
 	api.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"message": "pong",
 		})
 	})
-	api.POST("/getToken", s.getToken)
+	api.POST("/getToken", authMiddleware(authorizationServiceURL), s.getToken)
 	s.Server.Handler = api
 	return s
 }

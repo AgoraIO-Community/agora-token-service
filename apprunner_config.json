@@ -1,0 +1,27 @@
+{
+    "SourceConfiguration": {
+        "ImageRepository": {
+            "ImageIdentifier": "418541585715.dkr.ecr.us-east-1.amazonaws.com/wf-agora-token-server:latest",
+            "ImageConfiguration": {
+              "Port": "8080"
+            },
+            "ImageRepositoryType": "ECR"
+          },
+          "AutoDeploymentsEnabled": true,
+          "AuthenticationConfiguration": {
+            "AccessRoleArn": "arn:aws:iam::418541585715:role/service-role/AppRunnerECRAccessRole"
+          }
+    },
+    "InstanceConfiguration": {
+        "Cpu": "0.5 vCPU",
+        "Memory": "1 GB"
+      },
+    "HealthCheckConfiguration": {
+        "Protocol": "HTTP",
+        "Path": "/ping",
+        "Interval": 10,
+        "Timeout": 5,
+        "HealthyThreshold": 1,
+        "UnhealthyThreshold": 2
+    }
+}
