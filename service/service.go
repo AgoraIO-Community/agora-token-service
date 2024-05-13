@@ -93,6 +93,7 @@ func NewService() *Service {
 	api := gin.Default()
 
 	api.Use(s.nocache())
+	api.Use(s.CORSMiddleware())
 	api.GET("rtc/:channelName/:role/:tokenType/:rtcuid/", s.getRtcToken)
 	api.GET("rtm/:rtmuid/", s.getRtmToken)
 	api.GET("rte/:channelName/:role/:tokenType/:rtcuid/", s.getRtcRtmToken)
