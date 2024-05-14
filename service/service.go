@@ -12,6 +12,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"github.com/gin-contrib/cors"
+	"github.com/gin-contrib/secure"
 )
 
 // Service represents the main application service.
@@ -98,6 +99,13 @@ func NewService() *Service {
 		AllowOrigins:     []string{corsAllowOrigin},
 		AllowMethods:     []string{"GET", "POST", "OPTIONS", "PUT"},
 		//AllowHeaders:     []string{"Authorization"},
+	}))
+	api.Use(secure.New(secure.Config{
+		STSSeconds:            315360000,
+		STSIncludeSubdomains:  true,
+		FrameDeny:             true,
+		ContentTypeNosniff:    true,
+		BrowserXssFilter:      true,
 	}))
 	api.GET("rtc/:channelName/:role/:tokenType/:rtcuid/", authMiddleware(authorizationServiceURL), s.getRtcToken)
 	api.GET("rtm/:rtmuid/", authMiddleware(authorizationServiceURL), s.getRtmToken)
