@@ -98,7 +98,7 @@ func NewService() *Service {
 	api.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{corsAllowOrigin},
 		AllowMethods:     []string{"GET", "POST", "OPTIONS", "PUT"},
-		//AllowHeaders:     []string{"Authorization"},
+		AllowHeaders:     []string{"Content-Type", "WF-USER-TOKEN"},
 	}))
 	api.Use(secure.New(secure.Config{
 		STSSeconds:            315360000,
