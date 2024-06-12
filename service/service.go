@@ -94,12 +94,6 @@ func NewService() *Service {
 
 	api.Use(s.nocache())
 	api.Use(s.CORSMiddleware())
-	api.GET("rtc/:channelName/:role/:tokenType/:rtcuid/", s.getRtcToken)
-	api.GET("rtm/:rtmuid/", s.getRtmToken)
-	api.GET("rte/:channelName/:role/:tokenType/:rtcuid/", s.getRtcRtmToken)
-	api.GET("rte/:channelName/:role/:tokenType/:rtcuid/:rtmuid/", s.getRtcRtmToken)
-	api.GET("chat/app/", s.getChatToken)             // Chat token for API calls
-	api.GET("chat/account/:chatid/", s.getChatToken) // Chat token for SDK calls
 	api.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"message": "pong",
